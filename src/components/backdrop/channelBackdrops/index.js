@@ -3,21 +3,22 @@ import { useSelector} from "react-redux";
 import InvitePeople from "./İnvitePeople";
 import CreateChannel from "./createChannel";
 import CreateGroup from "./createGroup";
+import EditChannel from "./editChannel";
 
 const ChannelBackDrops = () => {
-  const { subType } = useSelector((state) => state.backDrop);
+  const { subType, id, channelid, groupID } = useSelector((state) => state.backDrop);
   return (
     <>
           {(() => {
-            console.log("TypeBack:", subType)
             switch (subType) {
               case "Invite":
                 return (<InvitePeople/>)
               case "Group":
-                return (<CreateGroup/>)
+                return (<CreateGroup id={id}/>)
               case "Channel":
-                return (<CreateChannel/>)
-
+                return (<CreateChannel id={id} groupID = {groupID}/>)
+              case "Edit":
+                return (<EditChannel id={id} channelID ={channelid} groupID={groupID}/>)
               default:
                 break;
             }

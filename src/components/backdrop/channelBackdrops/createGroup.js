@@ -6,12 +6,59 @@ import {
   Item,
   StyledBackButton
 } from "../../../materialUİElements/backDropMUİ";
-import { Typography, TextField, InputAdornment, Button } from "@mui/material";
+import { Typography, TextField, InputAdornment, Button, Box } from "@mui/material";
 
 
 
-const CreateGroup = () => {
+const CreateGroup = ({id}) => {
 const dispatch = useDispatch();
+
+const create = async ({ name }) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/server/${id}/group/create`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name }),
+        credentials: "include",
+      }
+    );
+
+    const responseData = await response.json();
+
+    if (!response.ok) {
+      throw new Error(response);
+    }
+    console.log(responseData);
+    // Optionally, you can return any data returned by the server (e.g., user information)
+  } catch (error) {
+    /* console.log("Catch:", error.message); */
+    /* throw error.message === "0"
+      ? new Error(`User name or Password is wrong`)
+      : new Error("Server is Down"); */
+  }
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const name = formData.get("group-name");
+  
+  try {
+   const channelİnfo = await create({ name }); // Call your loginUser function with form data
+    
+    window.location.reload();
+
+    // Redirect to login page after successful sign-up
+  } catch (error) {
+    /* console.error("Error signing up:", error); */
+    console.log(error);
+    // Handle error (e.g., display error message to user)
+  }
+};
 
   return (
     <>
@@ -23,6 +70,8 @@ const dispatch = useDispatch();
             alignItems: "center",
             height: "100%",
           }}
+          onSubmit={handleSubmit}
+          component="form"
         >
           <Typography
             variant="h5"
@@ -46,9 +95,18 @@ const dispatch = useDispatch();
           >
             Name Of The Group
           </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              width: "90%",
+              marginTop: "20px",
+            }}
+          >
           <TextField
             id="outlined-basic"
             label=" New Group"
+            name="group-name"
             variant="outlined"
             style={{
               bottom: "0",
@@ -56,7 +114,7 @@ const dispatch = useDispatch();
               width: "90%",
               marginTop: "20px",
             }}
-            InputProps={{
+           /*  InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <Button
@@ -68,8 +126,16 @@ const dispatch = useDispatch();
                   </Button>
                 </InputAdornment>
               ),
-            }}
+            }} */
           />
+           <Button
+              type="submit"
+              variant="contained" // Can be 'contained', 'outlined', etc.
+              size="small" // Smaller button to fit within the text field
+            >
+              Add
+            </Button>
+          </Box>
          <StyledBackButton onClick={() => {dispatch(setToggle(""));}}>Back</StyledBackButton>
         </StyledFormControl>
       </Item>

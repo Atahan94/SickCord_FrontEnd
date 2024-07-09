@@ -124,7 +124,7 @@ const getServers = async () => { try {
             style={{ padding: "0", minWidth: 77, marginBottom: 10 }}
             {...a11yProps(0)}
           />
-          {servers.map((_, index) => (
+          {servers.length > 0 && servers.map((_, index) => (
             <StyledTab
               key={index + 1}
               icon={
@@ -168,7 +168,7 @@ const getServers = async () => { try {
         <TabPanel value={value} index={0}>
           <UserChats />
         </TabPanel>
-        {servers.map((el, indx) => (
+        {servers.length > 0 && servers.map((el, indx) => (
           <TabPanel value={value} index={indx + 1}>
           <Server serverData ={el} />
         </TabPanel>

@@ -61,6 +61,7 @@ const UserProfile = () => {
         }}
         count={5}
         content={contentsToPass}
+        passToChild={true}
       >
         <ListItem alignItems="flex-start">
           <ListItemText

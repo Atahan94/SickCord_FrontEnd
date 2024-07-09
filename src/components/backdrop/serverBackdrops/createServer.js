@@ -57,19 +57,14 @@ const CreateServer = ({back}) => {
   };
 
   const handleSubmit = async (e) => {
-    console.log("Submit Create");
     e.preventDefault();
     const formData = new FormData(e.target);
     const name = formData.get("name");
     //const password = formData.get("password");
-
     try {
       const userİnfo = await postServer({ name }); // Call your loginUser function with form data
       
-      console.log("userInfo", userİnfo);
-      /* navigate("/dashboard"); */
       window.location.reload();
-      // Redirect to login page after successful sign-up
     } catch (error) {
       //setError({ error: true, type: error.message });
       // Handle error (e.g., display error message to user)

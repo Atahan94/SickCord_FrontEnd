@@ -1,25 +1,31 @@
 import { useState } from "react";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { setToggle } from "../../../../store/actions/backdropActions";
 import ListItemChannel from "../../lists/listItemChannel";
 import { KeyboardArrowDownOutlined as KeyboardArrowDownOutlinedIcon } from "@mui/icons-material";
+import AddSharpIcon from '@mui/icons-material/AddSharp';
 import { ListUtility } from "../../Uİ-utility/listUtility";
-import { Typography, List, Box } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 
-function generate(element) {
-  return [0, 1, 2].map((value) =>
-    React.cloneElement(element, {
-      key: value,
-    })
-  );
-}
 
-const ChannelList = (prop) => {
+
+const ChannelList = ({datas, isGroup, groupName, serverId, groupID}) => {
   const [isListVisible, setIsListVisible] = useState(false);
+  const dispatch = useDispatch();
+
+  
+  const passData = (item, id, groupID = "") => ({
+    data: item,
+    serverId: id,
+    groupID: groupID
+  });
+   
   return (
     <>
-      {prop.isGroup === true ? (
+      {isGroup === true ? (
         <>
-        <Box display={"flex"}>
+        <Box sx={{ cursor: "pointer", display: "flex", width: "100%"}}  onClick={() => setIsListVisible(!isListVisible)}>
         <KeyboardArrowDownOutlinedIcon
               fontSize="small"
               sx={{
@@ -29,21 +35,38 @@ const ChannelList = (prop) => {
               }}
             />
           <Typography
-            onClick={() => setIsListVisible(!isListVisible)}
-            sx={{ cursor: "pointer", color: "white", fontSize:"15px" }}
+           
+            sx={{ cursor: "pointer", color: "white", fontSize:"15px", width: "75%" }}
             
           >
-            {prop.groupName}
+            {groupName}
           </Typography>
+          <Box
+        component={AddSharpIcon}
+        onClick={(e) => {
+          e.stopPropagation();
+          dispatch(setToggle("Channel", "Channel", serverId, "", groupID ))
+        }}
+        sx={{
+          position: 'relative',
+          right: "0px",
+          cursor: 'pointer',
+          color: 'white',
+          '&:hover': {
+            backgroundColor: 'rgba(255, 255, 255, 0.2)', // Change this to your desired hover background color
+            borderRadius: '50%', // Optional: to make it a circular background
+          },
+        }}
+      />
           </Box>
           {isListVisible && (
-            <ListUtility count={5} sx={{ width: "91%", left: "21px" }}>
+            <ListUtility sx={{ width: "91%", left: "21px" }} content={{content: datas, pass: passData, serverId: serverId, groupID: groupID}} passToChild={false}>
               <ListItemChannel/>
             </ListUtility>
           )}
         </>
       ) : (
-        <ListUtility count={5} sx={{ width: "91%", left: "21px" }}>
+        <ListUtility sx={{ width: "91%", left: "21px" }} content={{content: datas, pass: passData, serverId: serverId}} passToChild={false}>
           <ListItemChannel/>
         </ListUtility>
       )}

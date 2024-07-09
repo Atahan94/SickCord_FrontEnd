@@ -1,8 +1,7 @@
 import React from "react";
 import { List } from "@mui/material";
 
-function generate(element, end, content) {
-  console.log("Test-Content:", content)
+function generate(element, end, content, passToChild) {
   const contentLength = content ? content.content.length : end;
   
   return Array.from(
@@ -11,7 +10,7 @@ function generate(element, end, content) {
   ).map((value, indx) => {
     let newElement = React.cloneElement(element, { key: value });
     
-    if (content && newElement.props.children !== undefined) {
+    if (passToChild && newElement.props.children !== undefined) {
       
       const firstChild = React.cloneElement(
         newElement.props.children[0],
@@ -20,6 +19,11 @@ function generate(element, end, content) {
 
       newElement = React.cloneElement(newElement, {
         children: [firstChild, ...newElement.props.children.slice(1)],
+      });
+    }
+    else if(passToChild == false){
+      newElement = React.cloneElement(newElement, {
+        ...content.pass(content.content[indx], content.serverId, content?.groupID),
       });
     }
     return newElement;
@@ -33,7 +37,7 @@ export const ListUtility = (props) => {
       color: 'gray',
       ...props.sx, // Combine existing sx with incoming props.sx
     }} >
-      {generate(props.children, props.count, props?.content)}
+      {generate(props.children, props.count, props?.content, props?.passToChild)}
     </List>
   );
 };

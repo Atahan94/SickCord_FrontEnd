@@ -17,15 +17,14 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 
-const CreateChannel = ({ id, groupID  }) => {
+const EditChannel = ({ id, channelID, groupID }) => {
   const dispatch = useDispatch();
 
-  console.log("GROUPID-Test", groupID == ""? "no group" : "group", "serverID", id);
-
-  const deleteGroup = async () => {
+  
+  const deleteChannel = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/server/${id}/group/delete/${groupID}`,
+        `http://localhost:3000/server/${id}/${groupID === ""? `channel/delete/`:`group/${groupID}/deleteChannel/`}${channelID}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -47,11 +46,10 @@ const CreateChannel = ({ id, groupID  }) => {
         : new Error("Server is Down"); */
     }
   };
-
-  const create = async ({ name, type}) => {
+  const editChannel = async ({ name, type }) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/server/${id}/${groupID === ""? "channel/create" : `group/${groupID}/createChannel`}`,
+        `http://localhost:3000/server/${id}/${groupID === ""? `channel/edit`:`group/${groupID}/editChannel/`}${channelID}`,
         {
           method: "POST",
           headers: {
@@ -84,7 +82,7 @@ const CreateChannel = ({ id, groupID  }) => {
     const name = formData.get("channel-name");
 
     try {
-     const channelİnfo = await create({ name, type }); // Call your loginUser function with form data
+     const channelİnfo = await editChannel({ name, type }); // Call your loginUser function with form data
       
       window.location.reload();
 
@@ -95,6 +93,8 @@ const CreateChannel = ({ id, groupID  }) => {
       // Handle error (e.g., display error message to user)
     }
   };
+  
+  console.log("EDİT CHANNEL severID", id, "channelid", channelID,"isGroups", groupID == ""? "no group": "group" ,"Edit group channel", groupID)
 
   return (
     <>
@@ -118,7 +118,7 @@ const CreateChannel = ({ id, groupID  }) => {
               fontSize: "30px",
             }}
           >
-            Create Channel
+            Edit Channel
           </Typography>
           <Typography
             variant="subtitle2"
@@ -156,32 +156,16 @@ const CreateChannel = ({ id, groupID  }) => {
                 bottom: "0",
                 left: "0",
               }}
-              /*  InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <Button
-                    type="submit"
-                    variant="contained" // Can be 'contained', 'outlined', etc.
-                    size="small" // Smaller button to fit within the text field
-                    onClick={handleButtonClick}
-                  >
-                    Add
-                  </Button>
-                </InputAdornment>
-              ),
-            }} */
             />
             <Button
               type="submit"
               variant="contained" // Can be 'contained', 'outlined', etc.
               size="small" // Smaller button to fit within the text field
             >
-              Add
+              Edit
             </Button>
           </Box>
-           {groupID !== "" && 
-           <Box>
-            <Typography
+          <Typography
             variant="subtitle2"
             component="div"
             sx={{
@@ -190,17 +174,15 @@ const CreateChannel = ({ id, groupID  }) => {
               fontSize: "14px",
             }}
           >
-            or
+            Or
           </Typography>
           <Button
               variant="contained" // Can be 'contained', 'outlined', etc.
               size="small" // Smaller button to fit within the text field
-              onClick={deleteGroup}
+              onClick={deleteChannel}
             >
-              Delete Group
+              Delete
             </Button>
-           </Box>
-           }
           <StyledBackButton
             onClick={() => {
               dispatch(setToggle(""));
@@ -214,4 +196,4 @@ const CreateChannel = ({ id, groupID  }) => {
   );
 };
 
-export default CreateChannel;
+export default EditChannel;

@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 
 
-const ChannelSection = ({name, serverId}) => {
+const ChannelSection = ({name, serverId, channels, groups}) => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const dispatch = useDispatch();
   
@@ -54,25 +54,25 @@ const ChannelSection = ({name, serverId}) => {
       text: "Invite People",
       icon: <PersonAddAltOutlinedIcon />,
       subType: "Invite",
-      onClickHandler: (subType) =>{handleCloseNavMenu(); dispatch(setToggle("Channel", subType));}
+      onClickHandler: (subType) =>{handleCloseNavMenu(); dispatch(setToggle("Channel", subType, serverId));}
     },
     {
       text: "Create Channel",
       icon: <AddCircleOutlinedIcon />,
       subType: "Channel",
-      onClickHandler: (subType) =>{handleCloseNavMenu(); dispatch(setToggle("Channel", subType));}
+      onClickHandler: (subType) =>{handleCloseNavMenu(); dispatch(setToggle("Channel", subType, serverId));}
     },
     {
       text: "Create Group",
       icon: <LibraryAddOutlinedIcon />,
       subType: "Group",
-      onClickHandler: (subType) =>{handleCloseNavMenu(); dispatch(setToggle("Channel", subType));}
+      onClickHandler: (subType) =>{handleCloseNavMenu(); dispatch(setToggle("Channel", subType, serverId));}
     },
     {
       text: "Delete Server",
       icon: <DeleteForeverSharpIcon />,
       subType: "None",
-      onClickHandler: () =>{delServer(); }
+      onClickHandler: () =>{delServer();}
     },
   ];
 
@@ -157,8 +157,8 @@ const ChannelSection = ({name, serverId}) => {
       </Box>
       <StyledBox2
       >
-       <ChannelList isGroup = {false}/>
-       <ChannelList isGroup = {true} groupName={"only"}/>
+       <ChannelList isGroup = {false} datas={channels} serverId={serverId}/>
+       {groups.length > 0? groups.map((el) => <ChannelList key={el._id} isGroup = {true} groupName={el.name} datas={el.channels} groupID={el._id} serverId={serverId}/>): ""}
        </StyledBox2>
        <UserBar/>
     </>

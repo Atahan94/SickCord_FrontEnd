@@ -12,14 +12,13 @@ import ServerMembers from "./serverMembers";
 const Server = ({serverData}) => {
   const [sectionToggle, setSectionToggle] = useState(true);
 
-  console.log(serverData);
+  console.log("SERVER DATA",serverData);
   return (
     <StyledSectionContainer>
       <Section1>
-        <ChannelSection name={serverData.name} serverId={serverData._id} />
+        <ChannelSection name={serverData.name} serverId={serverData._id} channels={serverData.channels} groups = {serverData.groups} />
       </Section1>
-      <Section2
-      >
+      <Section2>
        <Flow toggle={() => setSectionToggle(!sectionToggle)} isServer={true}/>
       </Section2>
       <Section3

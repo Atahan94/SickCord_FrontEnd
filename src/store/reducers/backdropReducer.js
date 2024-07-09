@@ -1,4 +1,3 @@
-
 const initState = {
   toggle: false,
   type: "",
@@ -12,7 +11,10 @@ export default (state = initState, action) => {
         ...state,
         toggle: !(state.toggle),
         type: action.backDropType,
-        subType: action.backDropSubType
+        subType: action.backDropSubType,
+        id: action.serverID,
+        channelid: action.channelId,
+        groupID: action.groupID
       };
     }
     default: {

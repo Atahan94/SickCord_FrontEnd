@@ -1,8 +1,11 @@
-export const setToggle = (type, subType = "") => {
+export const setToggle = (type, subType = "", id = "", channelId = "", groupID = "") => {
   return {
     type: "TOGGLE",
     backDropType: type,
     backDropSubType: subType,
+    serverID: id,
+    channelId: channelId,
+    groupID: groupID
   };
 };
 
