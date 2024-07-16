@@ -69,7 +69,7 @@ const Login = ({ StyledHeading }) => {
       dispatch(setToken(token));
       dispatch(setUser(user));
       
-      console.log("userInfo", token);
+      console.log("userInfo", token, "USER", user);
       navigate("/dashboard");
       // Redirect to login page after successful sign-up
     } catch (error) {

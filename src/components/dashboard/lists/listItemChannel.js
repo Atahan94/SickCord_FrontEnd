@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { setToggle } from "../../../store/actions/backdropActions";
+import { setActiveChat } from "../../../store/actions/serverActions";
 import {
   VolumeUpOutlined as VolumeUpOutlinedIcon,
   SettingsOutlined as SettingsOutlinedIcon,
@@ -15,15 +16,18 @@ import {
 const ListItemChannel = ({data, serverId, groupID}) =>{
   const dispatch = useDispatch();
   const {name, type, _id} = data;
+  
+  
 
-  console.log("ListItem Data", data, serverId, "ISGROUP", groupID == ""? "No group" : "Group", "GroupID", groupID )
+ /*  console.log("ListItem Data", data, serverId, "ISGROUP", groupID == ""? "No group" : "Group", "GroupID", groupID ) */
     return(
          <StyledListItem
           >
             <StyledButtonBase
-              onClick={() => console.log("name", name ,"serverId: ", serverId, "channelId", _id , "type", type)}
+              onClick={() =>{ console.log("name", name ,"serverId: ", serverId, "channelId", _id , "type", type)
+                         dispatch(setActiveChat(serverId, _id, (groupID == ""? "": groupID)));
+              }}
               disableRipple
-              
             >
               <ListItemIcon style={{ minWidth: 32 }}>
                 {type === "voice"?<VolumeUpOutlinedIcon style={{ color: "white" }} fontSize="medium" /> : <TagSharpIcon style={{ color: "white" }} fontSize="medium"/>}

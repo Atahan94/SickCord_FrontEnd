@@ -2,13 +2,15 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setToggle } from '../../store/actions/backdropActions';
 import { setServers } from "../../store/actions/serverActions";
-import { Tabs} from "@mui/material";
+import { setToken } from "../../store/actions/authActions";
+import { Tabs, Box} from "@mui/material";
 import { TabsStyledBox, StyledTab } from "../../materialUİElements/sectionsMUİ";
 import Server from "./server";
 import UserChats from "./userChats";
 import PropTypes from "prop-types";
 
-
+import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -47,8 +49,7 @@ const Dashboard = () => {
   const [value, setValue] = useState(0);
   const dispatch = useDispatch();
   const {servers}= useSelector((state) => state.server)
-
-  console.log("SERVERS_REDUX", servers);
+  const navigate = useNavigate();
 
 const getServers = async () => { try {
     const response = await fetch("http://localhost:3000/server/getAllServers", {
@@ -74,12 +75,37 @@ const getServers = async () => { try {
     console.log("Cannot get servers");
   }}
 
+  const logOut = async () => { try {
+    const response = await fetch("http://localhost:3000/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+
+    const responseData = await response.json();
+   
+    console.log("res type", responseData.res)
+
+    Cookies.remove("sessId")
+    dispatch(setToken(null));
+
+    navigate("/")
+    if (!response.ok) {
+      throw new Error(responseData.code);
+    }
+    // Optionally, you can return any data returned by the server (e.g., user information)
+  } catch (error) {
+    /* console.log("Catch:", error.message); */
+    console.log("Cannot get servers");
+  }}
+
+
  useEffect(() =>{
   getServers();
  }, []);
 
  useEffect(() => {
-  console.log("Tap Panel Value", value)
+  console.log("Tap Panel Value", value, /* servers.length > 0 && (!(value -1 > servers.length) || !(value -1 < servers.length)? "activeServerID: " + servers[value - 1]._id : "No Active Server"), "Servers", servers */)
+  
  }, [value]);
 
   const handleChange = (event, newValue) => {
@@ -88,6 +114,17 @@ const getServers = async () => { try {
   return (
     <div className="dashboard">
       <h6 className="dashboard-title">SickCord</h6>
+      <Box sx={{
+        color:"white",
+        fontSize: "12px",
+        position: "absolute",
+        right: "10px",
+        marginTop: "6px",
+        fontWeight: "700",
+        cursor: "pointer"
+      }}
+      onClick={logOut}
+      >Log Out</Box>
       <TabsStyledBox>
         <Tabs
           orientation="vertical"

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import React from "react";
 import {
   StyledSectionContainer,
@@ -15,6 +16,31 @@ import UserFriends from "./userFriends";
 const UserChats = () => {
   const [sectionToggle, setSectionToggle] = useState(true);
   const [isFriendsSection, setIsFriendsSection] = useState(true);
+
+  const getFriends = async () => { try {
+    const response = await fetch("http://localhost:3000/user/getFriends", {
+      method: "GET",
+      credentials: "include",
+    });
+
+    const responseData = await response.json();
+   
+    console.log("res type", responseData.res)
+
+    if (!response.ok) {
+      throw new Error(responseData.code);
+    }
+    // Optionally, you can return any data returned by the server (e.g., user information)
+  } catch (error) {
+    /* console.log("Catch:", error.message); */
+    console.log("Cannot get friends");
+  }}
+
+  useEffect(() =>{
+    getFriends();
+   }, []);
+
+
   return (
     <StyledSectionContainer>
       <Section1>

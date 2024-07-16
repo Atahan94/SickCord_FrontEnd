@@ -1,7 +1,7 @@
 const initState = {
   name:"name",
   email: "email",
-  servers: ["servers"],
+  friends: ["friends"]
 };
 
 export default (state = initState, action) => {
