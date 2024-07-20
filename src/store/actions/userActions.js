@@ -4,5 +4,24 @@ export const setUser = user => {
     user
   };
 };
+export const setFriends = friends => {
+  return {
+    type: "SET_FRİENDS",
+    friends
+  };
+};
+export const setChats = chats => {
+  return {
+    type: "SET_CHATS",
+    chats
+  };
+};
+export const setActiveChat = (active, data = {}) => {
+  return {
+    type: "SET_ACTİVE_CHAT",
+    active,
+    data: data
+  };
+};
 
 

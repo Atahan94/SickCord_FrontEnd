@@ -8,19 +8,21 @@ import {
 } from "@mui/material";
 import { ListUtility } from "../../Uİ-utility/listUtility";
 
-const UserProfile = () => {
+const UserProfile = ({data}) => {
+ // `${data.name} Friend & ${data.name}  Server`
+   console.log("USER PROFİLE", data)  
   const profileİnfo = [
     {
-      primaryText: "Name of the User",
-      subText: "Name of the User or his/her server",
+      primaryText: data.name,
+      subText: data.name,
     },
     {
       primaryText: "Common Servers and friend",
-      subText: "1 Friend & 1 Server",
+      subText: `${data.mutualFriends.length} Friend & ${data.mutualServers.length}  Server`,
     },
     {
       primaryText: "Since this date member of the Sickcord:",
-      subText: "DD/MM/YYYY",
+      subText: data.createdAt,
     },
   ];
   const passContent = (content, value) => {

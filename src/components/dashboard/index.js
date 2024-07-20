@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { setToggle } from '../../store/actions/backdropActions';
 import { setServers } from "../../store/actions/serverActions";
 import { setToken } from "../../store/actions/authActions";
+import { setActiveChat } from "../../store/actions/userActions";
+import { setFriends } from "../../store/actions/userActions";
 import { Tabs, Box} from "@mui/material";
 import { TabsStyledBox, StyledTab } from "../../materialUİElements/sectionsMUİ";
 import Server from "./server";
@@ -75,6 +77,27 @@ const getServers = async () => { try {
     console.log("Cannot get servers");
   }}
 
+  const getFriends = async () => { try {
+    const response = await fetch("http://localhost:3000/user/getFriends", {
+      method: "GET",
+      credentials: "include",
+    });
+
+    const responseData = await response.json();
+   
+    console.log("Friends", responseData.res);
+
+    dispatch(setFriends(responseData.res))
+
+    if (!response.ok) {
+      throw new Error(responseData.code);
+    }
+    // Optionally, you can return any data returned by the server (e.g., user information)
+  } catch (error) {
+    /* console.log("Catch:", error.message); */
+    console.log("Cannot get friends");
+  }}
+
   const logOut = async () => { try {
     const response = await fetch("http://localhost:3000/logout", {
       method: "POST",
@@ -87,6 +110,7 @@ const getServers = async () => { try {
 
     Cookies.remove("sessId")
     dispatch(setToken(null));
+    dispatch(setActiveChat(true))
 
     navigate("/")
     if (!response.ok) {
@@ -101,12 +125,8 @@ const getServers = async () => { try {
 
  useEffect(() =>{
   getServers();
+  getFriends();
  }, []);
-
- useEffect(() => {
-  console.log("Tap Panel Value", value, /* servers.length > 0 && (!(value -1 > servers.length) || !(value -1 < servers.length)? "activeServerID: " + servers[value - 1]._id : "No Active Server"), "Servers", servers */)
-  
- }, [value]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue !== servers.length + 1 ? newValue : value);

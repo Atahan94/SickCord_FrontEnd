@@ -1,5 +1,4 @@
 export const setServers = col => {
-  console.log("setServers Action", col);
   const updatedCol = col.map(server => ({
     ...server,
     activeChat: server.channels[0] || "no channel yet" // or any default value you want for activeChat

@@ -12,7 +12,7 @@ const ChannelBackDrops = () => {
           {(() => {
             switch (subType) {
               case "Invite":
-                return (<InvitePeople/>)
+                return (<InvitePeople id={id}/>)
               case "Group":
                 return (<CreateGroup id={id}/>)
               case "Channel":

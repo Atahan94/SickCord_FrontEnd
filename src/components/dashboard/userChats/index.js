@@ -15,38 +15,18 @@ import UserFriends from "./userFriends";
 
 const UserChats = () => {
   const [sectionToggle, setSectionToggle] = useState(true);
-  const [isFriendsSection, setIsFriendsSection] = useState(true);
 
-  const getFriends = async () => { try {
-    const response = await fetch("http://localhost:3000/user/getFriends", {
-      method: "GET",
-      credentials: "include",
-    });
+  const {friendChat} = useSelector((state) => state.user)
 
-    const responseData = await response.json();
-   
-    console.log("res type", responseData.res)
-
-    if (!response.ok) {
-      throw new Error(responseData.code);
-    }
-    // Optionally, you can return any data returned by the server (e.g., user information)
-  } catch (error) {
-    /* console.log("Catch:", error.message); */
-    console.log("Cannot get friends");
-  }}
-
-  useEffect(() =>{
-    getFriends();
-   }, []);
+  console.log("FRİENDS CHAT DATA", friendChat.chatData)
 
 
   return (
     <StyledSectionContainer>
       <Section1>
-        <ChatsSection toggle={(e) => setIsFriendsSection(e)} />
+        <ChatsSection />
       </Section1>
-      {isFriendsSection === true ? (
+      {friendChat.isActive === true ? (
         <Section2
         >
           <UserFriends />
@@ -55,14 +35,14 @@ const UserChats = () => {
         <>
           <Section2
           >
-            <Flow toggle={() => {setSectionToggle(!sectionToggle)}} isServer={false}/>
+           {friendChat.chatData && <Flow toggle={() => {setSectionToggle(!sectionToggle)}} isServer={false} name ={friendChat.chatData.with.name}/>}
           </Section2>
           <Section4
             style={{
               display: sectionToggle ? "flex" : "none",
             }}
           >
-            <UserProfile />
+            <UserProfile data={friendChat.chatData.with} />
           </Section4>
         </>
       )}

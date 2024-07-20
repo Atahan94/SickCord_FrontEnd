@@ -9,20 +9,24 @@ import {
   Typography,
   Box,
 } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { setActiveChat } from "../../../../store/actions/userActions.js";
 
 
-const ChatsSection = ({toggle}) => {
+
+const ChatsSection = () => {
+ const dispatch = useDispatch()
 
   return (
     <>
-      <Box sx={{ flexGrow: 1, display: { xs: "flex" } }}>
+      <Box sx={{ flexGrow: 1, display: "flex" }}>
         <StyledBox1
           sx={{
             justifyContent: "unset",
           }}
           aria-controls="menu-appbar"
           aria-haspopup="true"
-          onClick={()=>{toggle(true)}}
+          onClick={()=>{dispatch(setActiveChat(true))}}
           backgroundColor={ "rgba(0, 0, 0, 0)"
 }
         >
@@ -30,9 +34,8 @@ const ChatsSection = ({toggle}) => {
           <Typography>Friends</Typography>
         </StyledBox1>
       </Box>
-      <StyledBox2
-      >
-       <UserChats toggle={()=>{toggle(false)}}/>
+      <StyledBox2>
+       <UserChats />
        </StyledBox2>
        <UserBar/>
     </>

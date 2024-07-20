@@ -13,7 +13,9 @@ import NoChannel from "../Uİ-utility/noChannel";
 
 const Server = ({serverData}) => {
   const [sectionToggle, setSectionToggle] = useState(true);
+
   console.log("SERVER DATA", serverData);
+
   useEffect(() =>{
     serverData.activeChat.type !== "text" && setSectionToggle(false)
   })
@@ -28,7 +30,7 @@ const Server = ({serverData}) => {
       <Section3
         style={{display: sectionToggle ? "block" : "none"}}
       >
-        <ServerMembers />
+        <ServerMembers serverID={serverData._id} />
       </Section3>
     </StyledSectionContainer>
   );

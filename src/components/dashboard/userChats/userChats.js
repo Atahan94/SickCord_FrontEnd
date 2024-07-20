@@ -1,9 +1,44 @@
 import { Typography, Box } from "@mui/material";
 import ListItemUser from "../lists/listItemUser";
 import { ListUtility } from "../Uİ-utility/listUtility";
-import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setChats } from "../../../store/actions/userActions";
+import React, { useEffect } from "react";
 
-const UserChats = ({toggle}) => {
+const UserChats = () => {
+  const dispatch = useDispatch(); 
+ 
+  const {friendsChatS} = useSelector((state) => state.user);
+
+  const passData = (datas) => ({
+    data: datas,
+  });
+
+
+  const getChats = async () => { try {
+    const response = await fetch(`http://localhost:3000/user/getChats`, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    const responseData = await response.json();
+   
+    /* console.log("CHATS", responseData.res); */
+
+    if (!response.ok) {
+      throw new Error(responseData.code);
+    }
+
+    dispatch(setChats(responseData.res))
+    // Optionally, you can return any data returned by the server (e.g., user information)
+  } catch (error) {
+    /* console.log("Catch:", error.message); */
+    console.log("Cannot create chat");
+  }}
+  useEffect(() =>{
+   getChats()
+  }, [])
+
   return (
     <Box
       sx={{
@@ -17,9 +52,9 @@ const UserChats = ({toggle}) => {
           Direct Messages
         </Typography>
       </Box>
-      <ListUtility count={10}>
-        <ListItemUser toggle={toggle} hovarable={true}/>
-      </ListUtility>
+      {friendsChatS.length > 0 && <ListUtility content={{content: friendsChatS, pass: passData}} passToChild = {false}>
+        <ListItemUser  hovarable={true}/>
+      </ListUtility>}
     </Box>
   );
 };

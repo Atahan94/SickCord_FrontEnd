@@ -1,20 +1,75 @@
-import React, { useRef } from "react";
-import { useDispatch } from "react-redux";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { setToggle } from "../../../store/actions/backdropActions";
 import {
   StyledFormControl,
   Item,
   StyledBackButton,
 } from "../../../materialUİElements/backDropMUİ";
-import { StyledFlowBox } from "../../../materialUİElements/sectionsMUİ";
 import { StyledBox2 } from "../../../materialUİElements/sectionsMUİ";
+import InviteBar from "../../dashboard/Uİ-utility/inviteBar";
 import { ListUtility } from "../../dashboard/Uİ-utility/listUtility";
-import ListItemUser from "../../dashboard/lists/listItemUser";
 import { Typography, TextField, InputAdornment, Button } from "@mui/material";
-import { Box } from "@mui/system";
 
-const InvitePeople = () => {
+
+const InvitePeople = ({id}) => {
   const dispatch = useDispatch();
+  const {friends} = useSelector((state) => state.user);
+
+  const passData = (datas, id) => ({
+    data: datas,
+    serverID: id,
+    invite: inviteMember
+  });
+
+  const inviteMember = async (name) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/server/${id}/addMember/${name}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      const responseData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(response);
+      }
+      console.log(responseData);
+      // Optionally, you can return any data returned by the server (e.g., user information)
+    } catch (error) {
+      /* console.log("Catch:", error.message); */
+      /* throw error.message === "0"
+        ? new Error(`User name or Password is wrong`)
+        : new Error("Server is Down"); */
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const name = formData.get("memberName");
+
+    try {
+     const channelİnfo = await inviteMember(name); // Call your loginUser function with form data
+      
+      /* window.location.reload(); */
+
+      // Redirect to login page after successful sign-up
+    } catch (error) {
+      /* console.error("Error signing up:", error); */
+      console.log(error);
+      // Handle error (e.g., display error message to user)
+    }
+  };
+
+
+  console.log("BACKDROP INVİTE FRİENDS", friends)
 
   return (
     <>
@@ -26,6 +81,8 @@ const InvitePeople = () => {
             alignItems: "center",
             height: "100%",
           }}
+          onSubmit={handleSubmit}
+          component="form"
         >
           <Typography
             variant="h5"
@@ -50,23 +107,14 @@ const InvitePeople = () => {
             Invite Your Friends
           </Typography>
           <StyledBox2 sx={{height: "200px"}}>
-            <ListUtility count={10}>
-              <Box sx={{display: "flex", flexDirection: "row", marginTop:"10px"}}>
-              <ListItemUser/>
-              <Button
-                    type="submit"
-                    variant="contained" // Can be 'contained', 'outlined', etc.
-                    size="small" // Smaller button to fit within the text field
-                    sx={{margin: "15px 0px 15px 10px"}}
-              >
-                  Add
-              </Button>
-              </Box>
+            <ListUtility content={{content: friends, pass: passData, serverId: id}} passToChild = {false}>
+             <InviteBar/>
             </ListUtility>
           </StyledBox2>
           <TextField
             id="outlined-basic"
-            label="URL of the server"
+            label="Name of the member"
+            name="memberName"
             variant="outlined"
             style={{
               bottom: "0",

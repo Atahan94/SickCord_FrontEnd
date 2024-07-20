@@ -15,7 +15,7 @@ import {
   Button,
 } from "@mui/material";
 
-const Flow = ({ toggle, isServer }) => {
+const Flow = ({ toggle, isServer, prevmessage, name }) => {
   const [chatMessages, setChatMessages] = useState([]);
   const [currentMessage, setCurrentMessage] = useState("");
 
@@ -32,7 +32,7 @@ const Flow = ({ toggle, isServer }) => {
       <StyledFlowBox>
         <StyledFlowBox1>
           <Typography sx={{ color: "white", marginLeft: "15px" }}>
-            Name Of the User
+            {name? name :"Name Of the User" }
           </Typography>
           <Box>
             <StyledButtonBase
