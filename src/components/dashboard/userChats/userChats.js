@@ -10,11 +10,13 @@ const UserChats = () => {
  
   const {friendsChatS} = useSelector((state) => state.user);
 
+  
+
   const passData = (datas) => ({
     data: datas,
   });
 
-
+  
   const getChats = async () => { try {
     const response = await fetch(`http://localhost:3000/user/getChats`, {
       method: "GET",
@@ -35,6 +37,7 @@ const UserChats = () => {
     /* console.log("Catch:", error.message); */
     console.log("Cannot create chat");
   }}
+
   useEffect(() =>{
    getChats()
   }, [])

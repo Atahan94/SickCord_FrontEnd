@@ -1,17 +1,9 @@
-import { useState } from "react";
 import {
   StyledFlowBox,
-  StyledFlowBox1,
-  StyledButtonBase,
 } from "../../../materialUİElements/sectionsMUİ";
 import {
-  TextField,
   Box,
-  Typography,
-  InputAdornment,
-  Button,
 } from "@mui/material";
-import { display } from "@mui/system";
 import User from "./user";
 
 const generateUsers = (numUsers) => {
@@ -19,8 +11,8 @@ const generateUsers = (numUsers) => {
 };
 
 
-const VoiceChat = ({ toggle, isServer }) => {
-  const users = generateUsers(16);
+const VoiceChat = ({isServer }) => {
+  const users = generateUsers(25);
 
   const getGridStyles = (num) => {
     const columnCount = Math.ceil(Math.sqrt(num));

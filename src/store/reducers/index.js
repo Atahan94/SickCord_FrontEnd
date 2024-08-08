@@ -3,6 +3,7 @@ import userReducer from "./userReducer";
 import serverReducer from "./serverReducer";
 import backdropReducer from "./backdropReducer";
 import authReducer from "./authReducer";
+import socketReducer  from "./socketReducer";
 
 
 export default combineReducers({
@@ -10,4 +11,5 @@ export default combineReducers({
   user: userReducer,
   backDrop: backdropReducer,
   auth: authReducer,
+  socket: socketReducer
 });

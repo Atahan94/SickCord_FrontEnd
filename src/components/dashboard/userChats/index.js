@@ -18,7 +18,7 @@ const UserChats = () => {
 
   const {friendChat} = useSelector((state) => state.user)
 
-  console.log("FRİENDS CHAT DATA", friendChat.chatData)
+  console.log("FRİENDS CHAT DATA", friendChat)
 
 
   return (
@@ -35,7 +35,7 @@ const UserChats = () => {
         <>
           <Section2
           >
-           {friendChat.chatData && <Flow toggle={() => {setSectionToggle(!sectionToggle)}} isServer={false} name ={friendChat.chatData.with.name}/>}
+           {friendChat.chatData && <Flow toggle={() => {setSectionToggle(!sectionToggle)}} isServer={false} data ={{ _id: friendChat.chatData.id , name: friendChat.chatData.with.name}}/>}
           </Section2>
           <Section4
             style={{

@@ -1,11 +1,17 @@
 const initState = {
   name:"name",
   email: "email",
+  id: 0,
   friends: [],
   friendsChatS: [],
   friendChat:{
     isActive: true,
     chatData: {},
+  },
+  voiceChat:{
+    isConnected: false,
+    channelID: 0,
+    channelName: "",
   }
 };
 
@@ -34,7 +40,18 @@ export default (state = initState, action) => {
         ...state,
         friendChat: {
           isActive: action.active,
-          chatData: Object.keys(action.data).length === 0 ? state.friendChat.chatData : action.data
+          channelID: action.id,
+          channelName: action.name
+        }
+      };
+    }
+    case "SET_VOİCECHAT": {
+      return {
+        ...state,
+        voiceChat: {
+          isConnected: action.active,
+          channelID: action.id,
+          channelName: action.name
         }
       };
     }

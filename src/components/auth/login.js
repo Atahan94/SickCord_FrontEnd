@@ -1,4 +1,4 @@
-import { InputAdornment, useTheme } from "@mui/material";
+import { InputAdornment} from "@mui/material";
 import { VisibilityIcon } from "./icons";
 import {
   StyledButton,
@@ -9,27 +9,28 @@ import {
 import { useState, useEffect } from "react";
 import { setToken } from "../../store/actions/authActions";
 import { setUser } from "../../store/actions/userActions";
+import { setSocket } from "../../store/actions/socketActions";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import { initializeSocket } from "../../serverConnection/socket";
+
 
 const Login = ({ StyledHeading }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState({ error: false, type: "" });
 
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
-  const curTheme = useTheme();
+
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  useEffect(() => {
+  /* useEffect(() => {
     const sessionCookie = Cookies.get("sessId");
     if (sessionCookie) { 
       navigate("/dashboard"); // Handle the back cookie with the redux as well 
     }
-  }, [])
+  }, []) */
 
   const loginUser = async ({ email, password }) => {
     let responseData = {};
@@ -68,7 +69,12 @@ const Login = ({ StyledHeading }) => {
       const {token, user} = await loginUser({ email, password }); // Call your loginUser function with form data
       dispatch(setToken(token));
       dispatch(setUser(user));
+      localStorage.setItem('user', JSON.stringify(user));
+
+      const socket = await initializeSocket(user.name);
       
+      dispatch(setSocket(socket));
+    
       navigate("/dashboard");
       // Redirect to login page after successful sign-up
     } catch (error) {
@@ -80,7 +86,7 @@ const Login = ({ StyledHeading }) => {
   return (
     <>
       <StyledHeading>Login</StyledHeading>
-      {error.error ? <ErrorBox theme={curTheme}>{error.type}</ErrorBox> : ""}
+      {error.error ? <ErrorBox>{error.type}</ErrorBox> : ""}
       <StyledFormControl component="form" onSubmit={handleSubmit}>
         <StyledTextField
           label="E-mail"

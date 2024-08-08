@@ -27,14 +27,17 @@ export default (state = initialState, action) => {
   
         if (!server) return state;
   
-        if (groupID) {
+        if (groupID != "") {
           const group = findGroup(server.groups, groupID);
           if (!group) return state;
   
           const channel = findChannel(group.channels, chatID);
           if (!channel) return state;
   
-          server.activeChat = channel;
+          server.activeChat = {
+            ...channel,
+            group: groupID
+          };
         } else {
           const channel = findChannel(server.channels, chatID);
           if (!channel) return state;

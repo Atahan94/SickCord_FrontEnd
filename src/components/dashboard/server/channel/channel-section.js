@@ -21,7 +21,7 @@ import {
 } from "@mui/material";
 
 
-const ChannelSection = ({name, serverId, channels, groups}) => {
+const ChannelSection = ({name, serverId, channels, groups, owner}) => {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const dispatch = useDispatch();
   
@@ -68,13 +68,16 @@ const ChannelSection = ({name, serverId, channels, groups}) => {
       subType: "Group",
       onClickHandler: (subType) =>{handleCloseNavMenu(); dispatch(setToggle("Channel", subType, serverId));}
     },
-    {
+  ];
+
+  if (owner) {
+    pages.push({
       text: "Delete Server",
       icon: <DeleteForeverSharpIcon />,
       subType: "None",
-      onClickHandler: () =>{delServer();}
-    },
-  ];
+      onClickHandler: () => { delServer(); }
+    });
+  }
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);

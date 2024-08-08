@@ -17,21 +17,17 @@ import "./App.css";
 
 function App() {
   const [isDashboard, setisDashboard] = useState(false);
+  /* console.count(); */
 
   function LocationHandler() {
     const location = useLocation();
     useEffect(() => {
       console.log("LOC", location.pathname);
-      if (location.pathname === "/dashboard") {
-        setisDashboard(true);
-      } else {
-        setisDashboard(false);
-      }
+      setisDashboard(location.pathname === "/dashboard");
     }, [location]);
-
+  
     return null; // This component only handles location changes, so it renders nothing
   }
-  
   return (
     <div className="main_App">
       <Router>

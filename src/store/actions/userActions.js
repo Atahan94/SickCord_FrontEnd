@@ -23,5 +23,13 @@ export const setActiveChat = (active, data = {}) => {
     data: data
   };
 };
+export const setVoiceChat = (active, data) => {
+  return {
+    type: "SET_VOİCECHAT",
+    active,
+    id:data.id,
+    name: data.name 
+  };
+};
 
 

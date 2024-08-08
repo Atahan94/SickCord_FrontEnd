@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setToggle } from "../../../store/actions/backdropActions";
 import {
@@ -12,9 +12,20 @@ import { ListUtility } from "../../dashboard/Uİ-utility/listUtility";
 import { Typography, TextField, InputAdornment, Button } from "@mui/material";
 
 
+
 const InvitePeople = ({id}) => {
+  const [friendsNotMember, setFriendsNotMember] = useState([]);
   const dispatch = useDispatch();
   const {friends} = useSelector((state) => state.user);
+  const {servers} = useSelector((state) => state.server);
+
+  useEffect(()=> {
+    const server = servers.find((server) => server._id === id);
+    const newFriendsArray = friends.filter(friend => !server.members.includes(friend.id));
+    setFriendsNotMember(newFriendsArray)
+  },[])
+
+
 
   const passData = (datas, id) => ({
     data: datas,
@@ -107,7 +118,7 @@ const InvitePeople = ({id}) => {
             Invite Your Friends
           </Typography>
           <StyledBox2 sx={{height: "200px"}}>
-            <ListUtility content={{content: friends, pass: passData, serverId: id}} passToChild = {false}>
+            <ListUtility content={{content: friendsNotMember, pass: passData, serverId: id}} passToChild = {false}>
              <InviteBar/>
             </ListUtility>
           </StyledBox2>

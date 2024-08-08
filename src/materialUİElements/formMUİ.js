@@ -7,21 +7,23 @@ import {
   } from "@mui/material";
   import { styled } from "@mui/system";
 
-export const ErrorBox = styled(Box)(({ theme }) => ({
-    color: theme.palette.error.main,
-  }));
+export const ErrorBox = styled(Box)(() => {
+  const curTheme = useTheme();
+ return ({
+    color: curTheme.palette.error.main,
+  })});
 
 export const StyledFormControl = styled(FormControl)(({ theme }) => ({
     color: 'white', // You can use specific color or reference the theme if needed
   }));
   
 
-export const StyledButton = styled(Button)(({ theme }) => ({
+export const StyledButton = styled(Button)(() => ({
     marginTop: "50px",
   }));
 
 
-export const StyledTextField = styled(TextField)(({ theme }) => {
+export const StyledTextField = styled(TextField)(() => {
     const curTheme = useTheme();
     return `
     .MuiInputLabel-root {
