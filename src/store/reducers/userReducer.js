@@ -40,8 +40,7 @@ export default (state = initState, action) => {
         ...state,
         friendChat: {
           isActive: action.active,
-          channelID: action.id,
-          channelName: action.name
+          chatData:{...action.data}
         }
       };
     }

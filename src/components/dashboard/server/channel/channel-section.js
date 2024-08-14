@@ -159,6 +159,7 @@ const ChannelSection = ({name, serverId, channels, groups, owner}) => {
         </Menu>
       </Box>
       <StyledBox2
+      sx={{height: "79vh"}}
       >
        <ChannelList isGroup = {false} datas={channels} serverId={serverId}/>
        {groups.length > 0? groups.map((el) => <ChannelList key={el._id} isGroup = {true} groupName={el.name} datas={el.channels} groupID={el._id} serverId={serverId}/>): ""}

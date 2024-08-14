@@ -12,7 +12,8 @@ const Friend = ({data}) => {
     });
 
     const responseData = await response.json();
-   
+    
+    window.location.reload();
     console.log("Friends", responseData.res);
 
     if (!response.ok) {

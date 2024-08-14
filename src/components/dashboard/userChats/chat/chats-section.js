@@ -34,7 +34,7 @@ const ChatsSection = () => {
           <Typography>Friends</Typography>
         </StyledBox1>
       </Box>
-      <StyledBox2>
+      <StyledBox2 sx={{height:"79vh"}}>
        <UserChats />
        </StyledBox2>
        <UserBar/>

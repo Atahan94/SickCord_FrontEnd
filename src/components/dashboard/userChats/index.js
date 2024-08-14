@@ -14,8 +14,7 @@ import UserFriends from "./userFriends";
 
 
 const UserChats = () => {
-  const [sectionToggle, setSectionToggle] = useState(true);
-
+  const [sectionToggle, setSectionToggle] = useState(false);
   const {friendChat} = useSelector((state) => state.user)
 
   console.log("FRİENDS CHAT DATA", friendChat)
@@ -27,8 +26,7 @@ const UserChats = () => {
         <ChatsSection />
       </Section1>
       {friendChat.isActive === true ? (
-        <Section2
-        >
+        <Section2>
           <UserFriends />
         </Section2>
       ) : (
@@ -42,7 +40,7 @@ const UserChats = () => {
               display: sectionToggle ? "flex" : "none",
             }}
           >
-            <UserProfile data={friendChat.chatData.with} />
+           <UserProfile data={friendChat.chatData.with} />
           </Section4>
         </>
       )}

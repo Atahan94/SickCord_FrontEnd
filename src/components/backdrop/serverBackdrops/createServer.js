@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   StyledFormControl,
   StyledBox,
@@ -8,36 +8,44 @@ import {
 } from "../../../materialUİElements/backDropMUİ";
 import { Typography, TextField, InputAdornment, Button } from "@mui/material";
 
-const handleFileChange = (event) => {
-  const fileList = event.target.files;
-  // Handle the selected files
-  console.log(fileList);
-};
 
-const handleDrop = (event) => {
-  event.preventDefault();
-  const fileList = event.dataTransfer.files;
-  // Handle the dropped files
-  console.log(fileList);
-};
 
 const CreateServer = ({back}) => {
   const fileInputRef = useRef(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleFileChange = (event) => {
+    const fileList = event.target.files;
+    // Handle the selected files
+    if (fileList && fileList[0]) {
+      const file = fileList[0];
+      setSelectedImage(URL.createObjectURL(file));
+    }
+    console.log(fileList);
+  };
+  
+  const handleDrop = (event) => {
+    event.preventDefault();
+    const fileList = event.dataTransfer.files;
+    // Handle the dropped files
+    if (fileList && fileList[0]) {
+      const file = fileList[0];
+      setSelectedImage(URL.createObjectURL(file));
+    }
+    console.log(fileList);
+  };
 
   const handleBoxClick = () => {
     // Open the file input when the box is clicked
     fileInputRef.current.click();
   };
 
-  const postServer = async ({ name }) => {
+  const postServer = async (formdata) => {
     let responseData = {};
     try {
       const response = await fetch("http://localhost:3000/server/create", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name }),
+        body: formdata,
         credentials: "include",
       });
 
@@ -57,12 +65,12 @@ const CreateServer = ({back}) => {
   };
 
   const handleSubmit = async (e) => {
+    e.stopPropagation();
     e.preventDefault();
     const formData = new FormData(e.target);
-    const name = formData.get("name");
-    //const password = formData.get("password");
+    formData.append("image", fileInputRef.current.files[0])
     try {
-      const userİnfo = await postServer({ name }); // Call your loginUser function with form data
+      await postServer(formData); // Call your loginUser function with form data
       
       window.location.reload();
     } catch (error) {
@@ -107,10 +115,16 @@ const CreateServer = ({back}) => {
               style={{ display: "none" }}
               onChange={handleFileChange}
             />
-            <StyledIcon />
-            <Typography component="div" sx={{ color: "white" }}>
-              Upload
-            </Typography>
+            {selectedImage ? (
+        <img src={selectedImage} alt="Selected" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+      ) : (
+        <>
+          <StyledIcon />
+          <Typography component="div">
+            Upload
+          </Typography>
+        </>
+      )}
           </StyledBox>
           <TextField
             id="outlined-basic"
@@ -127,7 +141,13 @@ const CreateServer = ({back}) => {
            /*  InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                
+                <Button
+                    type="submit"
+                    variant="contained" // Can be 'contained', 'outlined', etc.
+                    size="small" // Smaller button to fit within the text field
+            >
+                    Create
+             </Button>
                 </InputAdornment>
               ),
             }} */

@@ -20,13 +20,25 @@ import { v4 as uuidv4 } from 'uuid';
 
 
 const Flow = ({ toggle, isServer, serverId, data }) => {
-  
+  const [filter, setFilter] = useState("");
+  const [filteredMessages, setFilteredMessages] = useState([]);
   const [chatMessages, setChatMessages] = useState([]);
   const [currentMessage, setCurrentMessage] = useState("");
   const [channelName, setChannelName] = useState("");
 
   const socket = useSelector(state => state.socket.socket);
- 
+  
+  useEffect(() => {
+    if (filter.trim()) {
+      setFilteredMessages(
+        chatMessages.filter((msg) =>
+          msg.message.toLowerCase().startsWith(filter.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredMessages(chatMessages);
+    }
+  }, [filter, chatMessages]);
 
   useEffect(() => {
     setCurrentMessage("");
@@ -118,7 +130,10 @@ const Flow = ({ toggle, isServer, serverId, data }) => {
       setCurrentMessage({ message: "", hash: "" }); // Clear the input field
     }
   };
-
+  
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
+  };
   return (
     <>
       <Box sx={{height: "90%"}}>
@@ -140,9 +155,10 @@ const Flow = ({ toggle, isServer, serverId, data }) => {
               )}
             </StyledButtonBase>
             <TextField
-              label="Filled"
+              label="Filter"
               variant="filled"
               style={{ left: "0", marginRight: "20px" }}
+              onChange={handleFilterChange}
               InputProps={{
                 // Change the height by adjusting the padding and font size
                 sx: {
@@ -164,7 +180,7 @@ const Flow = ({ toggle, isServer, serverId, data }) => {
           </Box>
         </StyledFlowBox1>
         <StyledFlowBox sx={{maxHeight:"82vh", paddingTop: "3.5%", display:"flex", flexDirection:"column-reverse" }}>
-        {chatMessages.map((msg, index) => (
+        {filteredMessages.map((msg, index) => (
           <Typography key={index} sx={{marginTop:"10px", marginLeft: "20px"}} >{msg.message}</Typography> // Display each message
         ))}
         </StyledFlowBox>

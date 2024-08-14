@@ -1,6 +1,8 @@
 import { styled } from "@mui/system";
 import { Box, ButtonBase, Tab } from "@mui/material";
 
+//desired size 1436 X 566 
+
 export const StyledBox = styled(Box)(({ hoverable }) => ({
   display: "flex",
   width: hoverable ? "235px" : "245px", // Adjust the width based on prop
@@ -26,7 +28,7 @@ export const StyledBox1 = styled(Box)(() => ({
 }));
 
 export const StyledBox2 = styled(Box)(() => ({
-  height: "576px",
+  height: "85vh",
   overflowY: "auto", // Enable vertical scrolling
   // Custom scroll bar styles
   "&::-webkit-scrollbar": {
@@ -47,9 +49,9 @@ export const StyledBox2 = styled(Box)(() => ({
 export const StyledBox3 = styled(Box)(() => ({
   display: "flex",
   bottom: "0px",
-  width: "245px",
+  width: "246px",
   padding: "10px 0px 10px 0px",
-  position: "absolute",
+  
   backgroundColor: "#222222",
 }));
 

@@ -6,8 +6,13 @@ import {
   ErrorBox,
   StyledFormControl,
 } from "../../materialUİElements/formMUİ";
+import {
+  StyledBox,
+  StyledIcon,
+} from "../../materialUİElements/backDropMUİ";
+import { Typography} from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 const SignUp = ({ StyledHeading }) => {
   const [error, setError] = useState({error:false,
@@ -17,17 +22,41 @@ const SignUp = ({ StyledHeading }) => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const curTheme = useTheme();
+  const fileInputRef = useRef(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
+  const handleFileChange = (event) => {
+    const fileList = event.target.files;
+    // Handle the selected files
+    if (fileList && fileList[0]) {
+      const file = fileList[0];
+      setSelectedImage(URL.createObjectURL(file));
+    }
+    console.log(fileList);
+  };
+  
+  const handleDrop = (event) => {
+    event.preventDefault();
+    const fileList = event.dataTransfer.files;
+    // Handle the dropped files
+    if (fileList && fileList[0]) {
+      const file = fileList[0];
+      setSelectedImage(URL.createObjectURL(file));
+    }
+    console.log(fileList);
+  };
 
-  const signUpUser = async ({ name, email, password }) => {
+  const handleBoxClick = () => {
+    // Open the file input when the box is clicked
+    fileInputRef.current.click();
+  };
+
+  const signUpUser = async (formData) => {
     let responseData = {};
     try {
       const response = await fetch("http://localhost:3000/signup", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
+        body: formData,
       });
 
       responseData = await response.json();
@@ -50,12 +79,11 @@ const SignUp = ({ StyledHeading }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const name = formData.get("name");
-    const email = formData.get("email");
-    const password = formData.get("password");
+    console.log("image",fileInputRef.current.files[0]);
+    formData.append("image", fileInputRef.current.files[0])
 
     try {
-      await signUpUser({ name, email, password }); // Call your signUpUser function with form data
+      await signUpUser(formData); // Call your signUpUser function with form data
       if (passwordConfirm) {
         navigate("/");
       } // Redirect to login page after successful sign-up
@@ -87,6 +115,30 @@ const SignUp = ({ StyledHeading }) => {
     <>
       <StyledHeading>SignUp</StyledHeading>
       {error.error ? <ErrorBox theme={curTheme}>{error.type}</ErrorBox> : ""}
+      <StyledBox
+            onClick={handleBoxClick}
+            onDrop={handleDrop}
+            onDragOver={(event) => event.preventDefault()}
+            sx={{alignSelf:"center", width:"8%", height:"17vh",overflow: "hidden", color: "white"}}
+          >
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
+            {selectedImage ? (
+        <img src={selectedImage} alt="Selected" style={{ maxWidth: '100%', maxHeight: '100%' }} />
+      ) : (
+        <>
+          <StyledIcon />
+          <Typography component="div">
+            Upload
+          </Typography>
+        </>
+      )}
+          </StyledBox>
       <StyledFormControl component="form" onSubmit={handleSubmit}>
         <StyledTextField label="Name" name="name" margin="dense" required/>
         <StyledTextField

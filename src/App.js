@@ -18,7 +18,25 @@ import "./App.css";
 function App() {
   const [isDashboard, setisDashboard] = useState(false);
   /* console.count(); */
+  useEffect(() => {
+    const enforceMinSize = () => {
+      console.log("resize")
+      const minWidth = 1436;
+      const minHeight = 566 ;
 
+      if (window.innerWidth < minWidth) {
+        window.resizeTo(minWidth, window.innerHeight);
+      }
+
+      if (window.innerHeight < minHeight) {
+        window.resizeTo(window.innerWidth, minHeight);
+      }
+    };
+
+    window.addEventListener('resize', enforceMinSize);
+
+    // Clean up the event listener on component unmount
+  });
   function LocationHandler() {
     const location = useLocation();
     useEffect(() => {

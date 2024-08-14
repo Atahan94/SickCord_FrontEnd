@@ -5,7 +5,7 @@ import { setActiveChat } from "../../../store/actions/userActions";
 
 const ListItemUser = ({ hovarable, data }) => {
   const dispatch = useDispatch();
-
+  console.log("ListItemUser", data);
   return (
     <StyledBox hoverable={hovarable} onClick={() => {dispatch(setActiveChat(false, data))}}>
       <Box style={{ display: "flex" }}>

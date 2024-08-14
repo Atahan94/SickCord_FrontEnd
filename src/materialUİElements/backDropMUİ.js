@@ -24,7 +24,6 @@ export const StyledBox = styled(Box)(({ theme }) => ({
   borderColor: theme.palette.divider, // Set border color, you can replace with a specific color
   borderRadius: "100px", // Set border radiu // Add padding for inner spacing
   textAlign: "center", // Optional text alignment
-  color: theme.palette.text.primary, // Set text color
   width: "25%",
   height: "30%",
   display: "flex",

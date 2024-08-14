@@ -56,7 +56,7 @@ const ServerMembers = ({serverID}) => {
         </Typography>
       </Box>
     
-      <ListUtility count={5} sx={{color: "green"}}>
+      <ListUtility count={10} sx={{color: "green"}}>
         <ListItemUser/>
       </ListUtility>
 

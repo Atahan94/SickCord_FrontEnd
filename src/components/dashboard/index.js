@@ -11,7 +11,6 @@ import Server from "./server";
 import UserChats from "./userChats";
 import PropTypes from "prop-types";
 
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 
 import { initializeSocket } from "../../serverConnection/socket";
@@ -113,14 +112,16 @@ const Dashboard = () => {
         method: "POST",
         credentials: "include",
       });
-
+      
       const responseData = await response.json();
 
       console.log("res type", responseData.res);
 
-      Cookies.remove("sessId");
+      /*socket.emit("disconnect");*/
+      
       dispatch(setToken(null));
       dispatch(setActiveChat(true));
+      
 
       navigate("/");
       if (!response.ok) {
@@ -149,12 +150,14 @@ const Dashboard = () => {
       dispatch(setUser(storedUser));
       socketRefresh(storedUser.name);
     }
-
+   
   }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue !== servers.length + 1 ? newValue : value);
   };
+
+  
   return (
     <div className="dashboard">
       <h6 className="dashboard-title">SickCord</h6>
@@ -209,14 +212,15 @@ const Dashboard = () => {
             {...a11yProps(0)}
           />
           {servers.length > 0 &&
-            servers.map((_, index) => (
+            servers.map((_, index) => {
+              return(
               <StyledTab
                 key={index + 1}
                 icon={
                   <>
                     <div className="server-tab-line" />
                     <img
-                      src="./images/Ekrem_imaro.jpg"
+                      src={_.image}/* "./images/Ekrem_imaro.jpg" */
                       alt="Image"
                       className="server-tab-image"
                     />
@@ -227,7 +231,7 @@ const Dashboard = () => {
                 style={{ padding: "0", paddingBottom: 12, minWidth: 77 }}
                 {...a11yProps(index + 1)}
               />
-            ))}
+            )})}
           <StyledTab
             icon={
               <>

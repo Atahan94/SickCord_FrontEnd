@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setVoiceChat } from "../../../store/actions/userActions";
-import SimplePeer from "simple-peer";
 import {
   StyledBox3,
   StyledButtonBase,
@@ -16,75 +15,133 @@ import {
 import PhoneDisabledSharpIcon from "@mui/icons-material/PhoneDisabledSharp";
 import { Typography, Box } from "@mui/material";
 
-
-
-
 const UserBar = () => {
   const [micToggle, setmicToggle] = useState(true);
   const [headPhoneToggle, setheadPhoneToggle] = useState(true);
-  const [peers, setPeers] = useState([]);
+  const audioContextRef = useRef(null);
+  const mediaStreamSourceRef = useRef(null);
+  const scriptNodeRef = useRef(null);
 
-  const { voiceChat } = useSelector((state) => state.user);
-  const socket = useSelector(state => state.socket.socket);
+  const { voiceChat, image, name } = useSelector((state) => state.user);
+  const socket = useSelector((state) => state.socket.socket);
   const dispatch = useDispatch();
-  const userAudio = useRef();
-  const peersRef = useRef([]);
 
-  
+  useEffect(() => {
+    if (socket) {
+      if (headPhoneToggle) {
+        {
+          socket.on("audio1", (data) => {
+            var audioContext1 = new (window.AudioContext ||
+              window.webkitAudioContext)();
+
+            const typedArray = new Float32Array(data);
+
+            const audioBuffer = audioContext1.createBuffer(
+              1,
+              typedArray.length,
+              audioContext1.sampleRate
+            );
+
+            const channelData = audioBuffer.getChannelData(0);
+
+            channelData.set(typedArray);
+
+            const audioBufferSource = audioContext1.createBufferSource();
+            audioBufferSource.buffer = audioBuffer;
+            audioBufferSource.connect(audioContext1.destination);
+
+            audioBufferSource.start();
+          });
+        }
+      } else {
+        socket.off("audio1");
+      }
+      return () => {
+        socket.off("audio1");
+      };
+    }
+  }, [headPhoneToggle]);
+
   useEffect(() => {
     if (voiceChat.isConnected) {
       console.log("VoiceChat connected:", voiceChat.channelName);
-
-      socket.emit('joinVoiceChannel', voiceChat.channelID);
-
-      navigator.mediaDevices.getUserMedia({ video: false, audio: true }).then(stream => {
-        userAudio.current.srcObject = stream;
-  
-        socket.on('signal', signalData => {
-          const item = peersRef.current.find(p => p.peerId === signalData.peerId);
-          if (item) {
-            item.peer.signal(signalData.signal);
-          } else {
-            const peer = createPeer(signalData.peerId, socket.id, stream);
-            peer.signal(signalData.signal);
-            peersRef.current.push({ peerId: signalData.peerId, peer });
-            setPeers(users => [...users, peer]);
-          }
-        });
-  
-        socket.emit('signal', { peerId: socket.id, roomId: voiceChat.channelID });
-      });
+      socket.emit("JoinVoiceChannel", { id: voiceChat.channelID });
+      const setAndStart = async () => {
+        await setupAudioStream();
+        await startStreaming();
+      };
+      if (micToggle) {
+        console.log("micON");
+        setAndStart();
+      } else {
+        console.log("micOFF");
+        stopStreaming();
+      }
     } else {
       console.log("VoiceChat disconnected");
-      socket.emit('disconnect voiceChannel');
+      stopStreaming();
     }
 
-    return () => {
-    socket.off('signal');
-      
-    };
-  }, [voiceChat.isConnected,voiceChat.channelID]);
+    return () => {};
+  }, [voiceChat.isConnected, voiceChat.channelID, micToggle]);
 
-  function createPeer(peerId, initiatorId, stream) {
-    const peer = new SimplePeer({
-      initiator: initiatorId === socket.id,
-      trickle: false,
-      stream,
-    });
+  function stopStreaming() {
+    // Disconnect the script node from the audio context
 
-    peer.on('signal', signal => {
-      socket.emit('signal', { signal, peerId });
-    });
+    if (scriptNodeRef.current) {
+      socket.emit("disconnect Room");
+      scriptNodeRef.current.disconnect();
+      scriptNodeRef.current.onaudioprocess = null;
+      scriptNodeRef.current = null;
+    }
 
-    peer.on('stream', stream => {
-      const audio = document.createElement('audio');
-      audio.srcObject = stream;
-      audio.play();
-    });
+    if (mediaStreamSourceRef.current) {
+      mediaStreamSourceRef.current.disconnect();
+      mediaStreamSourceRef.current = null;
+    }
 
-    return peer;
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
+    }
   }
-  
+
+  async function startStreaming() {
+    const bufferSize = 2048;
+    scriptNodeRef.current = audioContextRef.current.createScriptProcessor(
+      bufferSize,
+      1,
+      1
+    );
+
+    scriptNodeRef.current.onaudioprocess = function (audioProcessingEvent) {
+      const inputBuffer = audioProcessingEvent.inputBuffer;
+      const audioData = inputBuffer.getChannelData(0);
+
+      // Send the audio data to the server
+
+      /* socket.emit("audio", audioData); */
+      console.log(audioData);
+      socket.emit("audio", audioData);
+    };
+
+    mediaStreamSourceRef.current.connect(scriptNodeRef.current);
+    scriptNodeRef.current.connect(audioContextRef.current.destination);
+  }
+
+  async function setupAudioStream() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioContextRef.current = new (window.AudioContext ||
+        window.webkitAudioContext)();
+      audioContextRef.current.latencyHint = "interactive"; // or 'playback'
+
+      mediaStreamSourceRef.current =
+        audioContextRef.current.createMediaStreamSource(stream);
+    } catch (error) {
+      console.error("Error accessing microphone:", error);
+    }
+  }
 
   const handleClick = (var1, var2, callback1, callback2, condition) => {
     let bool = !var1;
@@ -95,12 +152,7 @@ const UserBar = () => {
     <Box>
       {voiceChat.isConnected && (
         <StyledBox3 sx={{ bottom: "7%", justifyContent: "space-around" }}>
-          <>
-        <audio ref={userAudio} autoPlay muted />
-        {peers.map((peer, index) => (
-          <audio key={index} autoPlay />
-        ))}
-        </>
+          <></>
           <Box style={{ display: "flex" }}>
             <Typography>{voiceChat.channelName}</Typography>
           </Box>
@@ -108,7 +160,7 @@ const UserBar = () => {
             sx={{ marginLeft: "30%" }}
             onClick={() => {
               console.log("disconnected");
-              dispatch(setVoiceChat(false, {id: 0 , name: ""}))
+              dispatch(setVoiceChat(false, { id: 0, name: "" }));
             }}
           >
             <PhoneDisabledSharpIcon />
@@ -116,13 +168,13 @@ const UserBar = () => {
         </StyledBox3>
       )}
       <StyledBox3>
-        <Box style={{ display: "flex" }}>
+        <Box style={{ display: "flex"}}>
           <img
-            src="./images/8922789.png"
+            src={image}
             alt="Image"
             className="channel-tab-user-image"
           />
-          <Typography>User Name</Typography>
+          <Typography>{name}</Typography>
         </Box>
         <Box style={{ display: "flex", marginRight: "10px" }}>
           <StyledButtonBase
