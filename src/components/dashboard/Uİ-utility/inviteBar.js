@@ -8,7 +8,7 @@ const InviteBar = ({data, serverID, invite}) => {
     console.log("INVİTE DATAS", data, "ServerID", serverID)
   return (
     <Box sx={{display: "flex", flexDirection: "row", marginTop:"10px"}}>
-    <ListItemUser data={{with:{name: data.name}}}/>
+    <ListItemUser data={{with:{name: data.name}, image:data.image}}/>
     <Button
           variant="contained" // Can be 'contained', 'outlined', etc.
           size="small" // Smaller button to fit within the text field

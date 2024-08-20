@@ -6,12 +6,15 @@ import { useEffect, useState } from "react";
 
 
 const ServerMembers = ({serverID}) => {
-  const [members, setMembers] = useState([])
+  const [members, setMembers] = useState({
+    online:[],
+    offline:[],
+  })
 
   const getAllMembers = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/server/getAllMembers/${serverID}`,
+        `https://sickcord-backend.onrender.com/server/getAllMembers/${serverID}`,
         {
           method: "GET",
           credentials: "include",
@@ -34,13 +37,13 @@ const ServerMembers = ({serverID}) => {
         : new Error("Server is Down"); */
     }
   };
-
+ console.log("MEMBERS",  members)
   useEffect(() =>{
     getAllMembers();
    }, []);
 
   const passData = (datas) => ({
-    data: {with:{name: datas.name}},
+    data: {with:{name: datas.name}, image: datas.image},
   });
   return (
     <StyledBox2
@@ -55,10 +58,10 @@ const ServerMembers = ({serverID}) => {
           Online
         </Typography>
       </Box>
-    
-      <ListUtility count={10} sx={{color: "green"}}>
+      { members.online.length > 0 ?<ListUtility content={{content: members.online, pass: passData}} passToChild = {false} sx={{color: "green"}}>
         <ListItemUser/>
-      </ListUtility>
+      </ListUtility>: <Typography>No Online</Typography>}
+      
 
       <Box display={"flex"}>
         <Typography
@@ -67,7 +70,7 @@ const ServerMembers = ({serverID}) => {
           Offline 
         </Typography>
       </Box>
-      {members.length > 0 ?<ListUtility content={{content: members, pass: passData}} passToChild = {false}>
+      {members.offline.length > 0 ?<ListUtility content={{content: members.offline, pass: passData}} passToChild = {false}>
         <ListItemUser/>
       </ListUtility>: <Typography>No members</Typography>}
     </StyledBox2>

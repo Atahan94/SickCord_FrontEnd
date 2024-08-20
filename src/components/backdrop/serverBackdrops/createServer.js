@@ -43,7 +43,7 @@ const CreateServer = ({back}) => {
   const postServer = async (formdata) => {
     let responseData = {};
     try {
-      const response = await fetch("http://localhost:3000/server/create", {
+      const response = await fetch("https://sickcord-backend.onrender.com/server/create", {
         method: "POST",
         body: formdata,
         credentials: "include",

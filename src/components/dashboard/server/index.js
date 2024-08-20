@@ -18,7 +18,7 @@ const Server = ({serverData}) => {
   const {id} = useSelector((state) => state.user)
 
  
-  console.log("SERVER DATA", serverData, "isowner", id === serverData.owner);
+  /* "console.log("SERVER DATA", serverData, "isowner", id === serverData.owner);" */
 
   useEffect(() =>{
     serverData.activeChat.type !== "text" && setSectionToggle(false)
@@ -29,7 +29,7 @@ const Server = ({serverData}) => {
         <ChannelSection name={serverData.name} serverId={serverData._id} channels={serverData.channels} groups = {serverData.groups} owner={id === serverData.owner}  />
       </Section1>
       <Section2>
-      { serverData.activeChat !== "no channel yet"? (serverData.activeChat.type === "text"? <Flow toggle={() => setSectionToggle(!sectionToggle)} isServer={true} serverId={serverData._id} data={serverData.activeChat}/> : <VoiceChat isServer={true}/>):  <NoChannel/>}
+      { serverData.activeChat !== "no channel yet"? (serverData.activeChat.type === "text"? <Flow toggle={() => setSectionToggle(!sectionToggle)} isServer={true} serverId={serverData._id} data={serverData.activeChat}/> : <VoiceChat type={serverData.activeChat.type} />):  <NoChannel/>}
       </Section2>
       <Section3
         style={{display: sectionToggle ? "block" : "none"}}

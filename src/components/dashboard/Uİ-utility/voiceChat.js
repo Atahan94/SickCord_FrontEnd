@@ -1,18 +1,33 @@
-import {
-  StyledFlowBox,
-} from "../../../materialUİElements/sectionsMUİ";
-import {
-  Box,
-} from "@mui/material";
+import { StyledFlowBox } from "../../../materialUİElements/sectionsMUİ";
+import { Box } from "@mui/material";
 import User from "./user";
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
-const generateUsers = (numUsers) => {
-  return Array.from({ length: numUsers }, (_, index) => `user${index + 1}`);
-};
+const VoiceChat = ({type}) => {
+  const { voiceChat } = useSelector((state) => state.user);
+  const socket = useSelector((state) => state.socket.socket);
+  const [connectedMembers, setConnectedMembers] = useState([]);
 
-
-const VoiceChat = ({isServer }) => {
-  const users = generateUsers(25);
+  
+  function arraysEqual(a, b) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+  useEffect(() => {
+    socket.on("updateMembers", (users) => {
+      console.log("CONNECTED", users, "COMPARE CONNECTED", arraysEqual(users, connectedMembers));
+      if (!arraysEqual(users, connectedMembers)) {
+        setConnectedMembers(users);
+      }
+    });
+    return () => {
+      socket.off("updateMembers");
+    };
+  },[voiceChat]);
 
   const getGridStyles = (num) => {
     const columnCount = Math.ceil(Math.sqrt(num));
@@ -22,24 +37,31 @@ const VoiceChat = ({isServer }) => {
     };
   };
 
-
   return (
     <>
-      <StyledFlowBox sx={{height: '100%', backgroundColor: "black",  overflow: 'hidden', boxSizing: 'border-box'}}>
-      <Box
-       sx={{
-        display: 'grid',
-        gridTemplateColumns: getGridStyles(users.length),
-        gap: 2,
-        width: '100%',
-        height: '100%',
-        boxSizing: 'border-box',
-      }}
+      <StyledFlowBox
+        sx={{
+          height: "100%",
+          backgroundColor: "black",
+          overflow: "hidden",
+          boxSizing: "border-box",
+        }}
       >
-        {users.map((user, index) => (
-          <User key={index} name={user} />
-        ))}
-      </Box>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: getGridStyles(connectedMembers.length),
+            gap: 2,
+            width: "100%",
+            height: "100%",
+            boxSizing: "border-box",
+          }}
+        >
+          {connectedMembers.length > 0 ?
+            connectedMembers.map((user, index) => (
+              <User key={index} name={user} />
+            )): <h6>No Users</h6>}
+        </Box>
       </StyledFlowBox>
     </>
   );

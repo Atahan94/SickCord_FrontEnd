@@ -64,7 +64,7 @@ const UserBar = () => {
 
   useEffect(() => {
     if (voiceChat.isConnected) {
-      console.log("VoiceChat connected:", voiceChat.channelName);
+     /*  console.log("VoiceChat connected:", voiceChat.channelName); */
       socket.emit("JoinVoiceChannel", { id: voiceChat.channelID });
       const setAndStart = async () => {
         await setupAudioStream();
@@ -75,21 +75,32 @@ const UserBar = () => {
         setAndStart();
       } else {
         console.log("micOFF");
-        stopStreaming();
+        stopmic();
       }
     } else {
-      console.log("VoiceChat disconnected");
+      /* console.log("VoiceChat disconnected"); */
       stopStreaming();
     }
 
     return () => {};
   }, [voiceChat.isConnected, voiceChat.channelID, micToggle]);
 
+  function stopmic(){
+    if (scriptNodeRef.current) {
+      scriptNodeRef.current.disconnect();
+      scriptNodeRef.current.onaudioprocess = null;
+      scriptNodeRef.current = null;
+    }
+
+    if (mediaStreamSourceRef.current) {
+      mediaStreamSourceRef.current.disconnect();
+      mediaStreamSourceRef.current = null;
+    }
+  }
   function stopStreaming() {
     // Disconnect the script node from the audio context
-
     if (scriptNodeRef.current) {
-      socket.emit("disconnect Room");
+      socket.emit("disconnectRoom");
       scriptNodeRef.current.disconnect();
       scriptNodeRef.current.onaudioprocess = null;
       scriptNodeRef.current = null;
@@ -120,7 +131,6 @@ const UserBar = () => {
 
       // Send the audio data to the server
 
-      /* socket.emit("audio", audioData); */
       console.log(audioData);
       socket.emit("audio", audioData);
     };

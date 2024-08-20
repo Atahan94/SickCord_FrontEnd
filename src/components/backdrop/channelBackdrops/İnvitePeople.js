@@ -36,7 +36,7 @@ const InvitePeople = ({id}) => {
   const inviteMember = async (name) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/server/${id}/addMember/${name}`,
+        `https://sickcord-backend.onrender.com/server/${id}/addMember/${name}`,
         {
           method: "POST",
           headers: {

@@ -16,7 +16,7 @@ const dispatch = useDispatch();
 const create = async ({ name }) => {
   try {
     const response = await fetch(
-      `http://localhost:3000/server/${id}/group/create`,
+      `https://sickcord-backend.onrender.com/server/${id}/group/create`,
       {
         method: "POST",
         headers: {

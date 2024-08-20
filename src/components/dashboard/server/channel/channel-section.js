@@ -28,7 +28,7 @@ const ChannelSection = ({name, serverId, channels, groups, owner}) => {
 
   const delServer = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/server/delete/${serverId}`, {
+      const response = await fetch(`https://sickcord-backend.onrender.com/server/delete/${serverId}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -159,7 +159,7 @@ const ChannelSection = ({name, serverId, channels, groups, owner}) => {
         </Menu>
       </Box>
       <StyledBox2
-      sx={{height: "79vh"}}
+      sx={{height: "70vh"}}
       >
        <ChannelList isGroup = {false} datas={channels} serverId={serverId}/>
        {groups.length > 0? groups.map((el) => <ChannelList key={el._id} isGroup = {true} groupName={el.name} datas={el.channels} groupID={el._id} serverId={serverId}/>): ""}

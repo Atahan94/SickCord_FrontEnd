@@ -25,17 +25,11 @@ const Login = ({ StyledHeading }) => {
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  /* useEffect(() => {
-    const sessionCookie = Cookies.get("sessId");
-    if (sessionCookie) { 
-      navigate("/dashboard"); // Handle the back cookie with the redux as well 
-    }
-  }, []) */
 
   const loginUser = async ({ email, password }) => {
     let responseData = {};
     try {
-      const response = await fetch("http://localhost:3000/login", {
+      const response = await fetch("https://sickcord-backend.onrender.com/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

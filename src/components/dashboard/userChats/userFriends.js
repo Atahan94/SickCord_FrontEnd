@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector} from "react-redux";
 import { useState} from "react";
 import { Box, Tab} from "@mui/material";
 import TabContext from '@mui/lab/TabContext';
@@ -12,6 +13,7 @@ import Friends from "./friends";
 
 const UserFriends = () => {
   const [value, setValue] = useState('1');
+  const {friends, onlineFriends} = useSelector((state) => state.user)
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -41,8 +43,8 @@ const UserFriends = () => {
                     }} label="Add Friend" value="4" />
           </TabList>
         </Box>
-        <TabPanel value="1">Item One</TabPanel>
-        <TabPanel value="2"><Friends/></TabPanel>
+        <TabPanel value="1"><Friends friends={onlineFriends}/></TabPanel>
+        <TabPanel value="2"><Friends friends={friends}/></TabPanel>
         <TabPanel value="3"><UserInvitations/></TabPanel>
         <TabPanel value="4"><AddFriend/></TabPanel>
       </TabContext>

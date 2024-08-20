@@ -181,7 +181,7 @@ const Flow = ({ toggle, isServer, serverId, data }) => {
         </StyledFlowBox1>
         <StyledFlowBox sx={{maxHeight:"82vh", paddingTop: "3.5%", display:"flex", flexDirection:"column-reverse" }}>
         {filteredMessages.map((msg, index) => (
-          <Typography key={index} sx={{marginTop:"10px", marginLeft: "20px"}} >{msg.message}</Typography> // Display each message
+          <Typography key={index} sx={{marginTop:"10px", marginLeft: "20px", color: "white", wordBreak:"break-word", overflow:"break-word"}} >{msg.message}</Typography> // Display each message
         ))}
         </StyledFlowBox>
       </Box>
@@ -191,7 +191,7 @@ const Flow = ({ toggle, isServer, serverId, data }) => {
         variant="outlined"
         value={currentMessage.message}
         onChange={handleInputChange}
-        style={{ position: "absolute", bottom: "0", left: "0", width: "100%" }}
+        style={{ position: "absolute", bottom: "0", left: "0", width: "100%"}}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">

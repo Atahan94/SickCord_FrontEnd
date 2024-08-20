@@ -54,7 +54,7 @@ const SignUp = ({ StyledHeading }) => {
   const signUpUser = async (formData) => {
     let responseData = {};
     try {
-      const response = await fetch("http://localhost:3000/signup", {
+      const response = await fetch("https://sickcord-backend.onrender.com/signup", {
         method: "POST",
         body: formData,
       });

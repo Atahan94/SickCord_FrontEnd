@@ -22,7 +22,7 @@ const UserInvitations = () => {
   const getInvitations = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/user/getInvitations`,
+        `https://sickcord-backend.onrender.com/user/getInvitations`,
         {
           method: "GET",
           headers: {

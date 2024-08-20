@@ -11,7 +11,7 @@ const AddFriend = () => {
   const curTheme = useTheme();
   
   const addFriend = async (name) => { try {
-    const response = await fetch(`http://localhost:3000/user/addFriend`, {
+    const response = await fetch(`https://sickcord-backend.onrender.com/user/addFriend`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -54,7 +54,8 @@ const AddFriend = () => {
   
   return (
     <>
-        <StyledFormControl sx={{width: "100%", marginTop: "20px"}} component="form" onSubmit={handleSubmit}>
+        <StyledFormControl sx={{width: "100%", marginTop: "20px", alignItems:"center"}} component="form" onSubmit={handleSubmit}>
+        {message.error ? <ErrorBox sx={{ fontWeight:"700"}} theme={curTheme}>{message.type}</ErrorBox> : <Typography sx={{ fontWeight:"700",color: "green"}} >{message.type}</Typography>}
          <TextField
             id="outlined-basic"
             label="User Name"
@@ -72,7 +73,7 @@ const AddFriend = () => {
           Add
           </StyledButton>
           </StyledFormControl>
-          {message.error ? <ErrorBox sx={{position:"absolute", top: "260px", right:"38%", fontWeight:"700"}} theme={curTheme}>{message.type}</ErrorBox> : <Typography sx={{position:"absolute", top: "187px", right:"44%", fontWeight:"700",color: "green"}} >{message.type}</Typography>}
+          
     
      
     </>

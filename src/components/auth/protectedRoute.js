@@ -8,11 +8,11 @@ const ProtectedRoute  = ({ children }) => {
   const [session, setSession] = useState(true);
   const dispatch = useDispatch();
 
-  const {token} = useSelector((state) => state.auth)/*  || localStorage.getItem('authToken'); */
+  const {token} = useSelector((state) => state.auth)
   
 
   const updateToken = async () =>{
-   try{ const response = await fetch("http://localhost:3000/token", {
+   try{ const response = await fetch("https://sickcord-backend.onrender.com/token", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

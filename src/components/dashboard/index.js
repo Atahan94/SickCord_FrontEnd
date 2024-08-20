@@ -4,7 +4,7 @@ import { setToggle } from "../../store/actions/backdropActions";
 import { setServers } from "../../store/actions/serverActions";
 import { setToken } from "../../store/actions/authActions";
 import { setActiveChat, setUser } from "../../store/actions/userActions";
-import { setFriends } from "../../store/actions/userActions";
+import { setFriends, setOnlineFriends } from "../../store/actions/userActions";
 import { Tabs, Box } from "@mui/material";
 import { TabsStyledBox, StyledTab } from "../../materialUİElements/sectionsMUİ";
 import Server from "./server";
@@ -57,7 +57,7 @@ const Dashboard = () => {
   const getServers = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/server/getAllServers",
+        "https://sickcord-backend.onrender.com/server/getAllServers",
         {
           method: "GET",
           headers: {
@@ -85,8 +85,11 @@ const Dashboard = () => {
 
   const getFriends = async () => {
     try {
-      const response = await fetch("http://localhost:3000/user/getFriends", {
+      const response = await fetch("https://sickcord-backend.onrender.com/user/getFriends", {
         method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
         credentials: "include",
       });
 
@@ -94,8 +97,8 @@ const Dashboard = () => {
 
       console.log("Friends", responseData.res);
 
-      dispatch(setFriends(responseData.res));
-
+      dispatch(setFriends(responseData.res.all));
+      dispatch(setOnlineFriends(responseData.res.online))
       if (!response.ok) {
         throw new Error(responseData.code);
       }
@@ -108,7 +111,7 @@ const Dashboard = () => {
 
   const logOut = async () => {
     try {
-      const response = await fetch("http://localhost:3000/logout", {
+      const response = await fetch("https://sickcord-backend.onrender.com/logout", {
         method: "POST",
         credentials: "include",
       });
@@ -117,12 +120,10 @@ const Dashboard = () => {
 
       console.log("res type", responseData.res);
 
-      /*socket.emit("disconnect");*/
-      
+      socket.disconnect();
       dispatch(setToken(null));
       dispatch(setActiveChat(true));
       
-
       navigate("/");
       if (!response.ok) {
         throw new Error(responseData.code);
@@ -150,7 +151,6 @@ const Dashboard = () => {
       dispatch(setUser(storedUser));
       socketRefresh(storedUser.name);
     }
-   
   }, []);
 
   const handleChange = (event, newValue) => {

@@ -5,12 +5,12 @@ import { setActiveChat } from "../../../store/actions/userActions";
 
 const ListItemUser = ({ hovarable, data }) => {
   const dispatch = useDispatch();
-  console.log("ListItemUser", data);
+  /* console.log("ListItemUser", data); */
   return (
     <StyledBox hoverable={hovarable} onClick={() => {dispatch(setActiveChat(false, data))}}>
       <Box style={{ display: "flex" }}>
         <img
-          src="./images/8922789.png"
+          src={data.image}
           alt="Image"
           className="channel-tab-user-image"
         />

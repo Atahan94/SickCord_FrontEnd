@@ -13,7 +13,7 @@ const Invitation = ({data}) => {
   const respondInvitation = async (accept) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/user/respondInvitation/${_id}`,
+        `https://sickcord-backend.onrender.com/user/respondInvitation/${_id}`,
         {
           method: "POST",
           headers: {

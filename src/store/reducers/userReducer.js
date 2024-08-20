@@ -3,6 +3,7 @@ const initState = {
   email: "email",
   id: 0,
   friends: [],
+  onlineFriends:[],
   friendsChatS: [],
   friendChat:{
     isActive: true,
@@ -27,6 +28,12 @@ export default (state = initState, action) => {
       return {
         ...state,
        friends: [...action.friends]
+      };
+    }
+    case "SET_ONLİNE_FRİENDS": {
+      return {
+        ...state,
+        onlineFriends: [...action.friends]
       };
     }
     case "SET_CHATS": {

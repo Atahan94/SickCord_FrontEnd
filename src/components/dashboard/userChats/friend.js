@@ -6,7 +6,7 @@ const Friend = ({data}) => {
   const {id, name} = data;
   
   const createChat = async () => { try {
-    const response = await fetch(`http://localhost:3000/user/createChat/${id}`, {
+    const response = await fetch(`https://sickcord-backend.onrender.com/user/createChat/${id}`, {
       method: "POST",
       credentials: "include",
     });

@@ -25,7 +25,7 @@ const CreateChannel = ({ id, groupID  }) => {
   const deleteGroup = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/server/${id}/group/delete/${groupID}`,
+        `https://sickcord-backend.onrender.com/server/${id}/group/delete/${groupID}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -51,7 +51,7 @@ const CreateChannel = ({ id, groupID  }) => {
   const create = async ({ name, type}) => {
     try {
       const response = await fetch(
-        `http://localhost:3000/server/${id}/${groupID === ""? "channel/create" : `group/${groupID}/createChannel`}`,
+        `https://sickcord-backend.onrender.com/server/${id}/${groupID === ""? "channel/create" : `group/${groupID}/createChannel`}`,
         {
           method: "POST",
           headers: {

@@ -10,6 +10,12 @@ export const setFriends = friends => {
     friends
   };
 };
+export const setOnlineFriends = friends => {
+  return {
+    type: "SET_ONLİNE_FRİENDS",
+    friends
+  };
+};
 export const setChats = chats => {
   return {
     type: "SET_CHATS",

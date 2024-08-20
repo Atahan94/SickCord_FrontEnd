@@ -28,6 +28,7 @@ export const StyledBox1 = styled(Box)(() => ({
 }));
 
 export const StyledBox2 = styled(Box)(() => ({
+  backgroundColor: "#2f2b2b",
   height: "85vh",
   overflowY: "auto", // Enable vertical scrolling
   // Custom scroll bar styles
@@ -144,6 +145,7 @@ export const Section1 = styled("div")({
   padding: "0",
   width: "246px",
   color: "white",
+  backgroundColor: "#222222"
 });
 export const Section2 = styled("div")({
   padding: "0",

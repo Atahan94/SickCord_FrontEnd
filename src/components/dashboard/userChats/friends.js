@@ -1,12 +1,12 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector} from "react-redux";
 import { Typography, Box } from "@mui/material";
 import Friend from "./friend";
 import { ListUtility } from "../Uİ-utility/listUtility";
 import { StyledFlowBox } from "../../../materialUİElements/sectionsMUİ";
 import React from "react";
 
-const Friends = () => {
-  const {friends} = useSelector((state) => state.user)
+const Friends = ({friends}) => {
+  
 
   const passData = (datas) => ({
     data: datas,
