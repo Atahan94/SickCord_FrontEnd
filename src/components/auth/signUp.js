@@ -6,18 +6,13 @@ import {
   ErrorBox,
   StyledFormControl,
 } from "../../materialUİElements/formMUİ";
-import {
-  StyledBox,
-  StyledIcon,
-} from "../../materialUİElements/backDropMUİ";
-import { Typography} from "@mui/material";
+import { StyledBox, StyledIcon } from "../../materialUİElements/backDropMUİ";
+import { Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef } from "react";
 
 const SignUp = ({ StyledHeading }) => {
-  const [error, setError] = useState({error:false,
-    type:""
-  });
+  const [error, setError] = useState({ error: false, type: "" });
   const [passwordConfirm, setpasswordConfirm] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -34,7 +29,7 @@ const SignUp = ({ StyledHeading }) => {
     }
     console.log(fileList);
   };
-  
+
   const handleDrop = (event) => {
     event.preventDefault();
     const fileList = event.dataTransfer.files;
@@ -54,43 +49,53 @@ const SignUp = ({ StyledHeading }) => {
   const signUpUser = async (formData) => {
     let responseData = {};
     try {
-      const response = await fetch("https://sickcord-backend.onrender.com/signup", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://sickcord-backend.onrender.com/signup",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       responseData = await response.json();
       console.log("Response data:", responseData);
-  
+
       if (!response.ok) {
         throw new Error(responseData.code);
       }
       // Optionally, you can return any data returned by the server (e.g., user information)
     } catch (error) {
-     /*  if (error.message === "11000") {
+      /*  if (error.message === "11000") {
         throw new Error("Email already in use");
-      } */ 
+      } */
       console.log("Catch:", error.message);
-       throw  error.message === "11000" ? new Error(`${responseData.email !== undefined ? "Email": "Name"} already in use`) : new Error("Server is Down")
-      
+      throw error.message === "11000"
+        ? new Error(
+            `${
+              responseData.email !== undefined ? "Email" : "Name"
+            } already in use`
+          )
+        : new Error("Server is Down");
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    console.log("image",fileInputRef.current.files[0]);
-    formData.append("image", fileInputRef.current.files[0])
-
     try {
+      if (fileInputRef.current.files[0]) {
+        formData.append("image", fileInputRef.current.files[0]);
+      }
+      else{
+        throw new Error("You need to upload image")
+      }
       await signUpUser(formData); // Call your signUpUser function with form data
       if (passwordConfirm) {
         navigate("/");
       } // Redirect to login page after successful sign-up
     } catch (error) {
       console.error("Error signing up:", error);
-      setError({error: true, type: error.message})
-      
+      setError({ error: true, type: error.message });
     }
   };
 
@@ -114,33 +119,41 @@ const SignUp = ({ StyledHeading }) => {
   return (
     <>
       <StyledHeading>SignUp</StyledHeading>
-      {error.error ? <ErrorBox theme={curTheme}>{error.type}</ErrorBox> : ""}
+      {error.error ? <ErrorBox >{error.type}</ErrorBox> : ""}
       <StyledBox
-            onClick={handleBoxClick}
-            onDrop={handleDrop}
-            onDragOver={(event) => event.preventDefault()}
-            sx={{alignSelf:"center", width:"8%", height:"17vh",overflow: "hidden", color: "white"}}
-          >
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              style={{ display: "none" }}
-              onChange={handleFileChange}
-            />
-            {selectedImage ? (
-        <img src={selectedImage} alt="Selected" style={{ maxWidth: '100%', maxHeight: '100%' }} />
-      ) : (
-        <>
-          <StyledIcon />
-          <Typography component="div">
-            Upload
-          </Typography>
-        </>
-      )}
-          </StyledBox>
+        onClick={handleBoxClick}
+        onDrop={handleDrop}
+        onDragOver={(event) => event.preventDefault()}
+        sx={{
+          alignSelf: "center",
+          width: "8%",
+          height: "17vh",
+          overflow: "hidden",
+          color: "white",
+        }}
+      >
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          style={{ display: "none" }}
+          onChange={handleFileChange}
+        />
+        {selectedImage ? (
+          <img
+            src={selectedImage}
+            alt="Selected"
+            style={{ maxWidth: "100%", maxHeight: "100%" }}
+          />
+        ) : (
+          <>
+            <StyledIcon />
+            <Typography component="div">Upload</Typography>
+          </>
+        )}
+      </StyledBox>
       <StyledFormControl component="form" onSubmit={handleSubmit}>
-        <StyledTextField label="Name" name="name" margin="dense" required/>
+        <StyledTextField label="Name" name="name" margin="dense" required />
         <StyledTextField
           label="E-mail"
           name="email"

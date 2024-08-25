@@ -4,16 +4,15 @@ import {
   StyledBox,
   StyledIcon,
   Item,
-  StyledBackButton
+  StyledBackButton,
 } from "../../../materialUİElements/backDropMUİ";
+import { ErrorBox } from "../../../materialUİElements/formMUİ";
 import { Typography, TextField, InputAdornment, Button } from "@mui/material";
 
-
-
-const CreateServer = ({back}) => {
+const CreateServer = ({ back }) => {
   const fileInputRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState(null);
- 
+  const [error, setError] = useState({ error: false, type: "" });
 
   const handleFileChange = (event) => {
     const fileList = event.target.files;
@@ -24,7 +23,7 @@ const CreateServer = ({back}) => {
     }
     console.log(fileList);
   };
-  
+
   const handleDrop = (event) => {
     event.preventDefault();
     const fileList = event.dataTransfer.files;
@@ -44,11 +43,14 @@ const CreateServer = ({back}) => {
   const postServer = async (formdata) => {
     let responseData = {};
     try {
-      const response = await fetch("https://sickcord-backend.onrender.com/server/create", {
-        method: "POST",
-        body: formdata,
-        credentials: "include",
-      });
+      const response = await fetch(
+        "https://sickcord-backend.onrender.com/server/create",
+        {
+          method: "POST",
+          body: formdata,
+          credentials: "include",
+        }
+      );
 
       responseData = await response.json();
 
@@ -69,13 +71,17 @@ const CreateServer = ({back}) => {
     e.stopPropagation();
     e.preventDefault();
     const formData = new FormData(e.target);
-    formData.append("image", fileInputRef.current.files[0])
     try {
+      if (fileInputRef.current.files[0]) {
+        formData.append("image", fileInputRef.current.files[0]);
+      } else {
+        throw new Error("You need to upload image");
+      }
       await postServer(formData); // Call your loginUser function with form data
-      
-      window.location.reload()
+
+      window.location.reload();
     } catch (error) {
-      //setError({ error: true, type: error.message });
+      setError({ error: true, type: error.message });
       // Handle error (e.g., display error message to user)
     }
   };
@@ -84,8 +90,8 @@ const CreateServer = ({back}) => {
     <>
       <Item elevation={4}>
         <StyledFormControl
-         component="form"
-         onSubmit={handleSubmit}
+          component="form"
+          onSubmit={handleSubmit}
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -93,6 +99,11 @@ const CreateServer = ({back}) => {
             height: "100%",
           }}
         >
+          {error.error ? (
+            <ErrorBox>{error.type}</ErrorBox>
+          ) : (
+            ""
+          )}
           <Typography
             variant="h5"
             component="div"
@@ -117,15 +128,17 @@ const CreateServer = ({back}) => {
               onChange={handleFileChange}
             />
             {selectedImage ? (
-        <img src={selectedImage} alt="Selected" style={{ maxWidth: '100%', maxHeight: '100%' }} />
-      ) : (
-        <>
-          <StyledIcon />
-          <Typography component="div">
-            Upload
-          </Typography>
-        </>
-      )}
+              <img
+                src={selectedImage}
+                alt="Selected"
+                style={{ maxWidth: "100%", maxHeight: "100%" }}
+              />
+            ) : (
+              <>
+                <StyledIcon />
+                <Typography component="div">Upload</Typography>
+              </>
+            )}
           </StyledBox>
           <TextField
             id="outlined-basic"
@@ -139,7 +152,7 @@ const CreateServer = ({back}) => {
               width: "90%",
               marginTop: "45px",
             }}
-           /*  InputProps={{
+            /*  InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                 <Button
@@ -153,14 +166,14 @@ const CreateServer = ({back}) => {
               ),
             }} */
           />
-           <Button
-                    type="submit"
-                    variant="contained" // Can be 'contained', 'outlined', etc.
-                    size="small" // Smaller button to fit within the text field
-            >
-                    Create
-           </Button>
-           <StyledBackButton onClick={back}>Back</StyledBackButton>
+          <Button
+            type="submit"
+            variant="contained" // Can be 'contained', 'outlined', etc.
+            size="small" // Smaller button to fit within the text field
+          >
+            Create
+          </Button>
+          <StyledBackButton onClick={back}>Back</StyledBackButton>
         </StyledFormControl>
       </Item>
     </>
