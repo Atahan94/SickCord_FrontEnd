@@ -64,8 +64,8 @@ function App() {
               <Dashboard />
             </ProtectedRoute>} />
         </Routes>
+        <MaiBackdrop/>
       </Router>
-      <MaiBackdrop/>
       {!isDashboard && (
         <footer className="footer">
           <div className="container">

@@ -74,12 +74,12 @@ const Dashboard = () => {
       dispatch(setServers(responseData.res));
 
       if (!response.ok) {
-        throw new Error(responseData.code);
+        throw new Error(responseData.error);
       }
       // Optionally, you can return any data returned by the server (e.g., user information)
     } catch (error) {
       /* console.log("Catch:", error.message); */
-      console.log("Cannot get servers");
+      console.log("Cannot get servers", error);
     }
   };
 
@@ -100,12 +100,12 @@ const Dashboard = () => {
       dispatch(setFriends(responseData.res.all));
       dispatch(setOnlineFriends(responseData.res.online))
       if (!response.ok) {
-        throw new Error(responseData.code);
+        throw new Error(responseData.error);
       }
       // Optionally, you can return any data returned by the server (e.g., user information)
     } catch (error) {
       /* console.log("Catch:", error.message); */
-      console.log("Cannot get friends");
+      console.log("Cannot get friends", error);
     }
   };
 

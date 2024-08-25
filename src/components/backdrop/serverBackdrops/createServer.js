@@ -13,6 +13,7 @@ import { Typography, TextField, InputAdornment, Button } from "@mui/material";
 const CreateServer = ({back}) => {
   const fileInputRef = useRef(null);
   const [selectedImage, setSelectedImage] = useState(null);
+ 
 
   const handleFileChange = (event) => {
     const fileList = event.target.files;
@@ -72,7 +73,7 @@ const CreateServer = ({back}) => {
     try {
       await postServer(formData); // Call your loginUser function with form data
       
-      window.location.reload();
+      window.location.reload()
     } catch (error) {
       //setError({ error: true, type: error.message });
       // Handle error (e.g., display error message to user)

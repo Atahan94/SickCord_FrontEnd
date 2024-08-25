@@ -20,6 +20,7 @@ import { Box } from "@mui/system";
 const CreateChannel = ({ id, groupID  }) => {
   const dispatch = useDispatch();
 
+
   console.log("GROUPID-Test", groupID == ""? "no group" : "group", "serverID", id);
 
   const deleteGroup = async () => {
@@ -38,7 +39,7 @@ const CreateChannel = ({ id, groupID  }) => {
         throw new Error(response);
       }
       console.log(responseData);
-      window.location.reload();
+      /* navigate("/dashboard"); */
       // Optionally, you can return any data returned by the server (e.g., user information)
     } catch (error) {
       /* console.log("Catch:", error.message); */
@@ -84,9 +85,9 @@ const CreateChannel = ({ id, groupID  }) => {
     const name = formData.get("channel-name");
 
     try {
-     const channelİnfo = await create({ name, type }); // Call your loginUser function with form data
+     await create({ name, type }); // Call your loginUser function with form data
       
-      window.location.reload();
+     window.location.reload()
 
       // Redirect to login page after successful sign-up
     } catch (error) {
